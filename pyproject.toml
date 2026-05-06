@@ -1,0 +1,28 @@
+[project]
+name = "cod8a"
+version = "0.1.0"
+description = "Marietta's own code documentation and visualization tool"
+authors = [
+    { name = "Akumbom",email = "akumbom5ma@gmail.com"}
+]
+maintainers = [ 
+    { name = "Marietta Akumbom" }
+ ]
+keywords = [ "visualization", "uml", "docs" ]
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "click (>=8.3.3,<9.0.0)",
+    "pydantic (>=2.13.3,<3.0.0)"
+]
+
+[tool.poetry]
+packages = [{include = "cod8a", from = "src"}]
+
+[tool.poetry.scripts]
+cod8a = "cod8a.cli:main"
+cde8a = "cod8a.cli:doc_main"
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
