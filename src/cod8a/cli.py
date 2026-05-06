@@ -8,7 +8,7 @@ from .generators.uml_generator import UMLGenerator
 from .generators.doc_generator import DocGenerator
 
 # Path to the C# analyzer project
-DOTNET_ANALYZER_PATH = r"E:\Projects\DotNet\Practice\Csharp15\CodeAnalysis\CodeAnalyzer.csproj"
+DOTNET_ANALYZER_PATH = "src\cod8a\dotnet\CodeAnalysis\CodeAnalyzer.csproj"
 
 def get_parser(path: str):
     if any(path.endswith(ext) for ext in [".cs", ".csproj", ".sln"]) or os.path.isdir(path) and any(f.endswith(".cs") for _, _, files in os.walk(path) for f in files):
@@ -44,24 +44,13 @@ def uml(file, project, output_json):
 
     generator = UMLGenerator()
     mermaid_diagram = generator.generate(struct)
-    json_data = json.dumps(asdict(struct), indent=2)
+    # json_data = json.dumps(asdict(struct), indent=2)
 
-    # For uml, this data will be sent to the UML.md for analysis and generation of the mermaid diagram
-    with open("UML.md", "w", encoding="utf-8") as f:
-        f.write("# UML Analysis\n\n")
-        f.write("## Data Structure (JSON)\n")
-        f.write("```json\n")
-        f.write(json_data)
-        f.write("\n```\n\n")
-        f.write("## Mermaid Diagram\n")
-        f.write("```mermaid\n")
-        f.write(mermaid_diagram)
-        f.write("\n```\n")
-
-    if output_json:
-        print(json_data)
-    else:
-        print(mermaid_diagram)
+    print(mermaid_diagram)
+    # if output_json:
+    #     print(json_data)
+    # else:
+    #     print(mermaid_diagram)
 
 @click.command()
 @click.option('-f', '--file', help='Specific file to document')

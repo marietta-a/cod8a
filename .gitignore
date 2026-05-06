@@ -170,3 +170,8 @@ cython_debug/
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+
+# dotnet analyzer output
+src/cod8a/dotnet/CodeAnalysis/bin/*
+src/cod8a/dotnet/CodeAnalysis/obj/*
