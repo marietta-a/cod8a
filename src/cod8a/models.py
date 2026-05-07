@@ -50,9 +50,10 @@ class Relationship:
 class FileStructure(BaseModel):
     id: int
     name: str
-    using_directives: List[UsingDirective]
-    classes: List[ClassStructure]
-    relationships: List[Relationship]
+    using_directives: Optional[List[UsingDirective]] = []
+    classes: Optional[List[ClassStructure]] = []
+    relationships: Optional[List[Relationship]] = []
+
 
 @dataclass
 class ProjectStructure:

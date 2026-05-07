@@ -22,13 +22,7 @@ class PythonParser:
 
         file_name = os.path.basename(file_path)
         
-        file_struct = FileStructure(
-            id=self._next_id(), 
-            name=file_name, 
-            using_directives=[], 
-            classes=[], 
-            relationships=[]
-        )
+        file_struct = FileStructure(id=self._next_id(), name=file_name)
 
         for node in tree.body:
             if isinstance(node, (ast.Import, ast.ImportFrom)):
