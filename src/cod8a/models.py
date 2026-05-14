@@ -55,7 +55,6 @@ class FileStructure(BaseModel):
     relationships: Optional[List[Relationship]] = []
 
 
-@dataclass
-class ProjectStructure:
+class ProjectStructure(BaseModel):
     name: str
-    files: List[FileStructure]
+    files: List[FileStructure] = []

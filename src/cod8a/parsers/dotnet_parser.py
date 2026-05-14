@@ -13,7 +13,8 @@ class DotnetParser:
         self.analyzer_path = analyzer_path
 
     def parse(self, project_root: str, file_name: str = None) -> Union[FileStructure, ProjectStructure]:
-        args = ["dotnet", "run", "--project", self.analyzer_path, project_root]
+        # args = ["dotnet", "run", "--project", self.analyzer_path, project_root]
+        args = ["dotnet", "run", "--project", self.analyzer_path]
         if file_name:
             args.append(file_name)
 
@@ -24,6 +25,7 @@ class DotnetParser:
         # The C# analyzer might still print some messages to stdout. 
         # We find the last line which should be our JSON.
         lines = result.stdout.strip().splitlines()
+        print(f"dump lines: {lines}")
         json_str = next((line for line in reversed(lines) if line.startswith('{') and line.endswith('}')), None)
         
         if not json_str:

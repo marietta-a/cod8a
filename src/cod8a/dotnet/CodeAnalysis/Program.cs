@@ -9,10 +9,11 @@ class Program
 {
     static void Main(string[] args)
     {
-        string projectRoot = args.Length > 0 ? args[0] : Directory.GetCurrentDirectory();
-        string fileName = args.Length > 1 ? args[1] : null;
-        var arr = projectRoot.Split("\\");
-        projectRoot = string.Join("\\", arr.Take(arr.Length - 3));
+        var fileName = args.Length > 0 ? args[0] : null;
+        string baseDir = args.Length > 0 ? args[0] : Directory.GetCurrentDirectory();
+        var projectRoot = baseDir.EndsWith("bin") 
+                         ? Path.GetFullPath(Path.Combine(baseDir, "..", "..", "..")) 
+                         : Path.GetFullPath(Path.Combine(baseDir));
 
         if (!Directory.Exists(projectRoot))
         {
