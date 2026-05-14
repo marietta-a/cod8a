@@ -9,14 +9,18 @@ from ..models import (
 )
 
 class DotnetParser:
-    def __init__(self, analyzer_path: str):
+    def __init__(self, analyzer_path: str, file_path: str):
         self.analyzer_path = analyzer_path
+        self.file_path = file_path
 
     def parse(self, project_root: str, file_name: str = None) -> Union[FileStructure, ProjectStructure]:
         # args = ["dotnet", "run", "--project", self.analyzer_path, project_root]
-        args = ["dotnet", "run", "--project", self.analyzer_path]
-        if file_name:
-            args.append(file_name)
+        print(f"Running dotnet analyzer with project: {self.analyzer_path} and file: {self.file_path}")
+        print(f"Project root: {project_root}")
+        print(f"File name: {file_name}")
+        args = ["dotnet", "run", "--project", self.analyzer_path, "--", self.file_path]
+        if self.file_path:
+            args.append(self.file_path)
 
         result = subprocess.run(args, capture_output=True, text=True)
         if result.returncode != 0:

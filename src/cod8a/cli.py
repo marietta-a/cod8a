@@ -8,17 +8,12 @@ from .generators.uml_generator import UMLGenerator
 from .generators.doc_generator import DocGenerator
 
 # Path to the C# analyzer project
-## On Mac
-DOTNET_ANALYZER_PATH = "dotnet/CodeAnalysis/CodeAnalyzer.csproj"
-## On Windows
-# DOTNET_ANALYZER_PATH = "dotnet\CodeAnalysis\CodeAnalyzer.csproj"
+DOTNET_ANALYZER_PATH = os.path.join(os.path.dirname(__file__), "dotnet", "CodeAnalysis", "CodeAnalyzer.csproj")
 
 def get_parser(path: str):
-    dirname = os.path.dirname(__file__)
-    project_root = os.path.join(dirname, DOTNET_ANALYZER_PATH)
-    print(f"Checking path: {project_root}")
+    print(f"Checking path: {DOTNET_ANALYZER_PATH}")
     if any(path.endswith(ext) for ext in [".cs", ".csproj", ".sln"]) or os.path.isdir(path) and any(f.endswith(".cs") for _, _, files in os.walk(path) for f in files):
-        return DotnetParser(project_root)
+        return DotnetParser(DOTNET_ANALYZER_PATH, path)
     return PythonParser()
 
 @click.group()
