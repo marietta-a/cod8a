@@ -34,7 +34,7 @@ def uml(file, project, output_json):
         if isinstance(parser, PythonParser):
             struct = parser.parse_file(file)
         else:
-            struct = parser.parse(os.path.dirname(file), os.path.basename(file))
+            struct = parser.parse()
     else:
         if isinstance(parser, PythonParser):
             from .models import ProjectStructure

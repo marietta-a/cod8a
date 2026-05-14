@@ -13,14 +13,8 @@ class DotnetParser:
         self.analyzer_path = analyzer_path
         self.file_path = file_path
 
-    def parse(self, project_root: str, file_name: str = None) -> Union[FileStructure, ProjectStructure]:
-        # args = ["dotnet", "run", "--project", self.analyzer_path, project_root]
-        print(f"Running dotnet analyzer with project: {self.analyzer_path} and file: {self.file_path}")
-        print(f"Project root: {project_root}")
-        print(f"File name: {file_name}")
+    def parse(self) -> Union[FileStructure, ProjectStructure]:
         args = ["dotnet", "run", "--project", self.analyzer_path, "--", self.file_path]
-        if self.file_path:
-            args.append(self.file_path)
 
         result = subprocess.run(args, capture_output=True, text=True)
         if result.returncode != 0:
