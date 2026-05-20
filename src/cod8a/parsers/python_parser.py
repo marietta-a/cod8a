@@ -2,7 +2,7 @@ import ast
 import json
 import os
 from typing import List
-from ..models import (
+from models.models import (
     FileStructure, ClassStructure, MethodStructure, 
     FieldStructure, ParameterStructure, UsingDirective
 )

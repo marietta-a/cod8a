@@ -1,5 +1,5 @@
 from typing import List, Union
-from ..models import FileStructure, ProjectStructure, ClassStructure
+from models.models import FileStructure, ProjectStructure, ClassStructure
 
 class DocGenerator:
     def generate(self, structure: Union[FileStructure, ProjectStructure]) -> str:

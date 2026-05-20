@@ -25,7 +25,9 @@ def cli():
 @click.option('-f', '--file', help='Specific file to analyze')
 @click.option('-p', '--project', help='Project directory to analyze')
 @click.option('--json', 'output_json', is_flag=True, help='Output in JSON format')
-def uml(file, project, output_json):
+@click.option('--type', 'diagram_type', default='class', type=click.Choice(['class', 'flowchart', 'sequence']), help='Type of diagram to generate')
+@click.option('-o', '--output', help='Output file path (saves as .mmd)')
+def uml(file, project, output_json, diagram_type, output):
     """Generate UML diagram (Mermaid format)."""
     target = file or project or os.getcwd()
     parser = get_parser(target)
@@ -37,21 +39,32 @@ def uml(file, project, output_json):
             struct = parser.parse()
     else:
         if isinstance(parser, PythonParser):
-            from .models import ProjectStructure
+            from ..models.models import ProjectStructure
             files = parser.parse_project(project or os.getcwd())
             struct = ProjectStructure(name=os.path.basename(project or os.getcwd()), files=files)
         else:
-            struct = parser.parse(project or os.getcwd())
+            struct = parser.parse()
+
+    if output_json:
+        if hasattr(struct, 'model_dump'):
+            print(json.dumps(struct.model_dump(), indent=2))
+        else:
+            print(json.dumps(asdict(struct), indent=2))
+        return
 
     generator = UMLGenerator()
-    mermaid_diagram = generator.generate(struct)
-    # json_data = json.dumps(asdict(struct), indent=2)
+    mermaid_diagram = generator.generate(struct, diagram_type=diagram_type)
 
-    print(mermaid_diagram)
-    # if output_json:
-    #     print(json_data)
-    # else:
-    #     print(mermaid_diagram)
+    if output:
+        # Ensure directory exists
+        out_dir = os.path.dirname(output)
+        if out_dir:
+            os.makedirs(out_dir, exist_ok=True)
+        with open(output, "w", encoding="utf-8") as f:
+            f.write(mermaid_diagram)
+        print(f"Diagram saved to {output}")
+    else:
+        print(mermaid_diagram)
 
 @click.command()
 @click.option('-f', '--file', help='Specific file to document')
@@ -69,17 +82,19 @@ def doc_cli(file, project, output_json):
             struct = parser.parse(os.path.dirname(file), os.path.basename(file))
     else:
         if isinstance(parser, PythonParser):
-            from .models import ProjectStructure
+            from ..models.models import ProjectStructure
             files = parser.parse_project(project or os.getcwd())
             struct = ProjectStructure(name=os.path.basename(project or os.getcwd()), files=files)
         else:
             struct = parser.parse(project or os.getcwd())
+    
+    return struct
 
-    if output_json:
-        print(json.dumps(asdict(struct), indent=2))
-    else:
-        generator = DocGenerator()
-        print(generator.generate(struct))
+    # if output_json:
+    #     print(json.dumps(asdict(struct), indent=2))
+    # else:
+    #     generator = DocGenerator()
+    #     print(generator.generate(struct))
 
 # Main entry point for cod8a
 def main():

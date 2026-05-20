@@ -2,7 +2,7 @@ import subprocess
 import json
 import os
 from typing import Union, List
-from ..models import (
+from models.models import (
     FileStructure, ProjectStructure, ClassStructure, 
     MethodStructure, FieldStructure, ParameterStructure, 
     UsingDirective, Relationship
