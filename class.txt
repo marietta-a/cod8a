@@ -1,0 +1,47 @@
+classDiagram
+    class FileStructure {
+        +int Id
+        +string Name
+        +List<UsingDirective> UsingDirectives
+        +List<ClassStructure> Classes
+    }
+
+    class UsingDirective {
+        +int Id
+        +string Name
+    }
+
+    class ClassStructure {
+        +int Id
+        +string Name
+        +List<MethodStructure> Methods
+        +List<FieldStructure> Fields
+    }
+
+    class MethodStructure {
+        +int Id
+        +string Name
+        +string Modifier
+        +string ReturnType
+        +List<ParameterStructure> Parameters
+    }
+
+    class FieldStructure {
+        +int Id
+        +string Name
+        +string Modifier
+        +string Type
+    }
+
+    class ParameterStructure {
+        +int Id
+        +string Name
+        +string Modifier
+        +string Type
+    }
+
+    FileStructure --> UsingDirective : contains
+    FileStructure --> ClassStructure : contains
+    ClassStructure --> MethodStructure : has
+    ClassStructure --> FieldStructure : has
+    MethodStructure --> ParameterStructure : has

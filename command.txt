@@ -1,0 +1,242 @@
+I am working on a python, C# uml generator (extraction of mermaid code). I have
+a script that extracts the syntax tree from the code to json (sample attached)
+Generate SKILL.md files that can convert the json to flowchart, class diagram
+and sequence diagram codes. Commands: when the user specify cod8a uml -f
+fileName -t mermaidType (e.g flowchart, class diagram or sequence diagram) The
+correct skill is invoked. SKILL.md knows the location of the skill containing
+the generation of flowchart, skill for class diagram and skill for sequence
+diagram. It invokes the skill based on the type of diagram specified by -t
+mermaidType. I have a python script that generates the json (see the attached
+template as an example) from the file provided in -f fileName; this script is
+located in "src\cod8a\cli.py" The various commands are cod8a uml -f fileName -t
+mermaidType cod8a docs -f fileName where docs generate documentation for the
+file provided in -f fileName and uml generates the mermaid code for the file
+provided in -f fileName, based on the mermaid type provided in -t mermaidType
+From the above prompts, generate the Skills necessary to accomplish the task the
+skills should be (SKILL.md -> entry point, a folder called, mermaid that
+contains flowchart.md -> for flowchart, class.md -> for class diagram, and
+sequence.md -> for sequence diagram)
+
+Json sample:
+{"Id":1,"Name":"models","Description":null,"Files":[{"Id":1,"Name":"net10.0","UsingDirectives":[{"Id":1,"Name":"System"},{"Id":2,"Name":"IO"},{"Id":3,"Name":"Linq"},{"Id":4,"Name":"Json"},{"Id":5,"Name":"models"},{"Id":6,"Name":"Parsers"}],"Classes":[{"Id":0,"Name":"Program","Methods":[{"Id":0,"Name":"Main","Modifier":"static","ReturnType":"void","Parameters":[{"Name":"args","Modifier":"","Type":"string[]","Summary":""}],"Summary":""}],"Fields":[],"Type":"class","Summary":""}]},{"Id":1,"Name":"net10.0","UsingDirectives":[{"Id":1,"Name":"Syntax"},{"Id":2,"Name":"System"},{"Id":3,"Name":"Generic"},{"Id":4,"Name":"Text"}],"Classes":[{"Id":0,"Name":"FileStructure","Methods":[],"Fields":[{"Id":0,"Name":"Id","Modifier":"public","Type":"int","Summary":""},{"Id":0,"Name":"Name","Modifier":"///
+\u003Csummary\u003E\r\n /// \u003Csee langword=\u0022nameof\u0022/\u003Eof the
+namespace, e.g., \u003Cc\u003EMyNamespace\u003C/c\u003E.\r\n ///
+\u003C/summary\u003E\r\n public","Type":"string","Summary":"///
+\u003Csummary\u003E\r\n /// \u003Csee langword=\u0022nameof\u0022/\u003Eof the
+namespace, e.g., \u003Cc\u003EMyNamespace\u003C/c\u003E.\r\n ///
+\u003C/summary\u003E"},{"Id":0,"Name":"UsingDirectives","Modifier":"///
+\u003Csummary\u003E\r\n /// Gets or sets the collection of using directives
+associated with the current context.\r\n /// \u003C/summary\u003E\r\n
+public","Type":"List\u003CUsingDirective\u003E","Summary":"///
+\u003Csummary\u003E\r\n /// Gets or sets the collection of using directives
+associated with the current context.\r\n ///
+\u003C/summary\u003E"},{"Id":0,"Name":"Classes","Modifier":"///
+\u003Csummary\u003E\r\n /// Gets or sets the collection of classes associated
+with the current instance.\r\n /// \u003C/summary\u003E\r\n
+public","Type":"List\u003CClassStructure\u003E","Summary":"///
+\u003Csummary\u003E\r\n /// Gets or sets the collection of classes associated
+with the current instance.\r\n ///
+\u003C/summary\u003E"}],"Type":"class","Summary":"/// \u003Csummary\u003E\r\n
+/// Represents the structure of a file, including its identifier and associated
+namespace details.\r\n ///
+\u003C/summary\u003E"},{"Id":0,"Name":"UsingDirective","Methods":[],"Fields":[{"Id":0,"Name":"Id","Modifier":"public","Type":"int","Summary":""},{"Id":0,"Name":"Name","Modifier":"///
+\u003Csummary\u003E\r\n /// \u003Csee langword=\u0022nameof\u0022/\u003Eof the
+namespace, e.g., \u003Cc\u003EMyNamespace\u003C/c\u003E.\r\n ///
+\u003C/summary\u003E\r\n public","Type":"string","Summary":"///
+\u003Csummary\u003E\r\n /// \u003Csee langword=\u0022nameof\u0022/\u003Eof the
+namespace, e.g., \u003Cc\u003EMyNamespace\u003C/c\u003E.\r\n ///
+\u003C/summary\u003E"},{"Id":0,"Name":"UsingDirectives","Modifier":"///
+\u003Csummary\u003E\r\n /// Gets or sets the collection of using directives
+associated with the current context.\r\n /// \u003C/summary\u003E\r\n
+public","Type":"List\u003CUsingDirective\u003E","Summary":"///
+\u003Csummary\u003E\r\n /// Gets or sets the collection of using directives
+associated with the current context.\r\n ///
+\u003C/summary\u003E"},{"Id":0,"Name":"Classes","Modifier":"///
+\u003Csummary\u003E\r\n /// Gets or sets the collection of classes associated
+with the current instance.\r\n /// \u003C/summary\u003E\r\n
+public","Type":"List\u003CClassStructure\u003E","Summary":"///
+\u003Csummary\u003E\r\n /// Gets or sets the collection of classes associated
+with the current instance.\r\n ///
+\u003C/summary\u003E"}],"Type":"record","Summary":""},{"Id":0,"Name":"ClassStructure","Methods":[],"Fields":[{"Id":0,"Name":"Id","Modifier":"public","Type":"int","Summary":""},{"Id":0,"Name":"Name","Modifier":"///
+\u003Csummary\u003E\r\n /// \u003Csee langword=\u0022nameof\u0022/\u003Eof the
+namespace, e.g., \u003Cc\u003EMyNamespace\u003C/c\u003E.\r\n ///
+\u003C/summary\u003E\r\n public","Type":"string","Summary":"///
+\u003Csummary\u003E\r\n /// \u003Csee langword=\u0022nameof\u0022/\u003Eof the
+namespace, e.g., \u003Cc\u003EMyNamespace\u003C/c\u003E.\r\n ///
+\u003C/summary\u003E"},{"Id":0,"Name":"UsingDirectives","Modifier":"///
+\u003Csummary\u003E\r\n /// Gets or sets the collection of using directives
+associated with the current context.\r\n /// \u003C/summary\u003E\r\n
+public","Type":"List\u003CUsingDirective\u003E","Summary":"///
+\u003Csummary\u003E\r\n /// Gets or sets the collection of using directives
+associated with the current context.\r\n ///
+\u003C/summary\u003E"},{"Id":0,"Name":"Classes","Modifier":"///
+\u003Csummary\u003E\r\n /// Gets or sets the collection of classes associated
+with the current instance.\r\n /// \u003C/summary\u003E\r\n
+public","Type":"List\u003CClassStructure\u003E","Summary":"///
+\u003Csummary\u003E\r\n /// Gets or sets the collection of classes associated
+with the current instance.\r\n ///
+\u003C/summary\u003E"}],"Type":"record","Summary":"/// \u003Csummary\u003E\r\n
+/// Represents a class, including its name and contained methods.\r\n ///
+\u003C/summary\u003E\r\n /// \u003Cparam
+name=\u0022Id\u0022\u003E\u003C/param\u003E\r\n /// \u003Cparam
+name=\u0022Name\u0022\u003E Gets or sets the name associated with the object.
+\u003C/param\u003E\r\n /// \u003Cparam name=\u0022Methods\u0022\u003E Gets or
+sets the collection of methods associated with this instance.
+\u003C/param\u003E\r\n /// \u003Cparam name=\u0022Fields\u0022\u003E Gets or
+sets the collection of field definitions associated with the structure.
+\u003C/param\u003E\r\n /// \u003Cparam name=\u0022Type\u0022\u003E Gets or sets
+the type associated with the current instance. \u003C/param\u003E\r\n ///
+\u003Cparam name=\u0022Summary\u0022\u003E Gets or sets the summary description
+for the current object.
+\u003C/param\u003E"},{"Id":0,"Name":"MethodStructure","Methods":[],"Fields":[{"Id":0,"Name":"Id","Modifier":"public","Type":"int","Summary":""},{"Id":0,"Name":"Name","Modifier":"///
+\u003Csummary\u003E\r\n /// \u003Csee langword=\u0022nameof\u0022/\u003Eof the
+namespace, e.g., \u003Cc\u003EMyNamespace\u003C/c\u003E.\r\n ///
+\u003C/summary\u003E\r\n public","Type":"string","Summary":"///
+\u003Csummary\u003E\r\n /// \u003Csee langword=\u0022nameof\u0022/\u003Eof the
+namespace, e.g., \u003Cc\u003EMyNamespace\u003C/c\u003E.\r\n ///
+\u003C/summary\u003E"},{"Id":0,"Name":"UsingDirectives","Modifier":"///
+\u003Csummary\u003E\r\n /// Gets or sets the collection of using directives
+associated with the current context.\r\n /// \u003C/summary\u003E\r\n
+public","Type":"List\u003CUsingDirective\u003E","Summary":"///
+\u003Csummary\u003E\r\n /// Gets or sets the collection of using directives
+associated with the current context.\r\n ///
+\u003C/summary\u003E"},{"Id":0,"Name":"Classes","Modifier":"///
+\u003Csummary\u003E\r\n /// Gets or sets the collection of classes associated
+with the current instance.\r\n /// \u003C/summary\u003E\r\n
+public","Type":"List\u003CClassStructure\u003E","Summary":"///
+\u003Csummary\u003E\r\n /// Gets or sets the collection of classes associated
+with the current instance.\r\n ///
+\u003C/summary\u003E"}],"Type":"record","Summary":"/// \u003Csummary\u003E\r\n
+/// Represents the metadata for a method, including its name, access modifier,
+return type, and parameters.\r\n /// \u003C/summary\u003E\r\n /// \u003Cparam
+name=\u0022Id\u0022\u003E\u003C/param\u003E\r\n /// \u003Cparam
+name=\u0022Name\u0022\u003E Gets or sets the name associated with the function.
+\u003C/param\u003E\r\n /// \u003Cparam name=\u0022Modifier\u0022\u003E Gets or
+sets the modifier associated with the function. \u003C/param\u003E\r\n ///
+\u003Cparam name=\u0022ReturnType\u0022\u003E Gets or sets the return type
+associated with the function. \u003C/param\u003E\r\n /// \u003Cparam
+name=\u0022Parameters\u0022\u003E Gets or sets the collection of parameters
+associated with the function. \u003C/param\u003E\r\n /// \u003Cparam
+name=\u0022Summary\u0022\u003E Gets or sets the summary description for the
+current object. \u003C/param\u003E\r\n /// \u003Cremarks\u003EUse this class to
+describe the signature and characteristics of a method in code analysis,\r\n ///
+code generation, or documentation scenarios. The class does not represent the
+method\u0027s implementation or\r\n ///
+behavior.\u003C/remarks\u003E"},{"Id":0,"Name":"FieldStructure","Methods":[],"Fields":[{"Id":0,"Name":"Id","Modifier":"public","Type":"int","Summary":""},{"Id":0,"Name":"Name","Modifier":"///
+\u003Csummary\u003E\r\n /// \u003Csee langword=\u0022nameof\u0022/\u003Eof the
+namespace, e.g., \u003Cc\u003EMyNamespace\u003C/c\u003E.\r\n ///
+\u003C/summary\u003E\r\n public","Type":"string","Summary":"///
+\u003Csummary\u003E\r\n /// \u003Csee langword=\u0022nameof\u0022/\u003Eof the
+namespace, e.g., \u003Cc\u003EMyNamespace\u003C/c\u003E.\r\n ///
+\u003C/summary\u003E"},{"Id":0,"Name":"UsingDirectives","Modifier":"///
+\u003Csummary\u003E\r\n /// Gets or sets the collection of using directives
+associated with the current context.\r\n /// \u003C/summary\u003E\r\n
+public","Type":"List\u003CUsingDirective\u003E","Summary":"///
+\u003Csummary\u003E\r\n /// Gets or sets the collection of using directives
+associated with the current context.\r\n ///
+\u003C/summary\u003E"},{"Id":0,"Name":"Classes","Modifier":"///
+\u003Csummary\u003E\r\n /// Gets or sets the collection of classes associated
+with the current instance.\r\n /// \u003C/summary\u003E\r\n
+public","Type":"List\u003CClassStructure\u003E","Summary":"///
+\u003Csummary\u003E\r\n /// Gets or sets the collection of classes associated
+with the current instance.\r\n ///
+\u003C/summary\u003E"}],"Type":"record","Summary":"/// \u003Cparam
+name=\u0022Id\u0022\u003E\u003C/param\u003E\r\n /// \u003Cparam
+name=\u0022Name\u0022\u003E Gets or sets the name associated with the field.
+\u003C/param\u003E\r\n /// \u003Cparam name=\u0022Modifier\u0022\u003E Gets or
+sets the modifier associated with the field. \u003C/param\u003E\r\n ///
+\u003Cparam name=\u0022Type\u0022\u003E Gets or sets the type associated with
+the field. \u003C/param\u003E\r\n /// \u003Cparam name=\u0022Summary\u0022\u003E
+Gets or sets the summary description for the current object.
+\u003C/param\u003E"},{"Id":0,"Name":"ParameterStructure","Methods":[],"Fields":[{"Id":0,"Name":"Id","Modifier":"public","Type":"int","Summary":""},{"Id":0,"Name":"Name","Modifier":"///
+\u003Csummary\u003E\r\n /// \u003Csee langword=\u0022nameof\u0022/\u003Eof the
+namespace, e.g., \u003Cc\u003EMyNamespace\u003C/c\u003E.\r\n ///
+\u003C/summary\u003E\r\n public","Type":"string","Summary":"///
+\u003Csummary\u003E\r\n /// \u003Csee langword=\u0022nameof\u0022/\u003Eof the
+namespace, e.g., \u003Cc\u003EMyNamespace\u003C/c\u003E.\r\n ///
+\u003C/summary\u003E"},{"Id":0,"Name":"UsingDirectives","Modifier":"///
+\u003Csummary\u003E\r\n /// Gets or sets the collection of using directives
+associated with the current context.\r\n /// \u003C/summary\u003E\r\n
+public","Type":"List\u003CUsingDirective\u003E","Summary":"///
+\u003Csummary\u003E\r\n /// Gets or sets the collection of using directives
+associated with the current context.\r\n ///
+\u003C/summary\u003E"},{"Id":0,"Name":"Classes","Modifier":"///
+\u003Csummary\u003E\r\n /// Gets or sets the collection of classes associated
+with the current instance.\r\n /// \u003C/summary\u003E\r\n
+public","Type":"List\u003CClassStructure\u003E","Summary":"///
+\u003Csummary\u003E\r\n /// Gets or sets the collection of classes associated
+with the current instance.\r\n ///
+\u003C/summary\u003E"}],"Type":"record","Summary":"/// \u003Csummary\u003E\r\n
+/// Represents a parameter definition, including its name, modifier, and type
+information.\r\n /// \u003C/summary\u003E\r\n /// \u003Cparam
+name=\u0022Name\u0022\u003E Gets or sets the name associated with the object.
+\u003C/param\u003E\r\n /// \u003Cparam name=\u0022Modifier\u0022\u003E Gets or
+sets the modifier associated with the current instance. \u003C/param\u003E\r\n
+/// \u003Cparam name=\u0022Type\u0022\u003E Gets or sets the type associated
+with the current instance. \u003C/param\u003E\r\n /// \u003Cparam
+name=\u0022Summary\u0022\u003E Gets or sets the summary description for the
+current object. \u003C/param\u003E\r\n /// \u003Cremarks\u003EUse this class to
+describe parameters for methods, constructors, or other callable members.\r\n
+/// The properties provide metadata about the parameter\u0027s identifier, its
+modifier (such as \u0027ref\u0027, \u0027out\u0027, or \u0027in\u0027),\r\n ///
+and its data
+type.\u003C/remarks\u003E"}]},{"Id":1,"Name":"net10.0","UsingDirectives":[{"Id":1,"Name":"System"},{"Id":2,"Name":"Generic"},{"Id":3,"Name":"Text"}],"Classes":[{"Id":0,"Name":"ProjectStructure","Methods":[],"Fields":[{"Id":0,"Name":"Id","Modifier":"///
+\u003Csummary\u003E\r\n /// Id of the Project\r\n /// \u003C/summary\u003E\r\n
+public","Type":"int","Summary":"/// \u003Csummary\u003E\r\n /// Id of the
+Project\r\n /// \u003C/summary\u003E"},{"Id":0,"Name":"Name","Modifier":"///
+\u003Csummary\u003E\r\n /// Name of the Project\r\n /// \u003C/summary\u003E\r\n
+public","Type":"string","Summary":"/// \u003Csummary\u003E\r\n /// Name of the
+Project\r\n ///
+\u003C/summary\u003E"},{"Id":0,"Name":"Description","Modifier":"///
+\u003Csummary\u003E\r\n /// Project Description\r\n /// \u003C/summary\u003E\r\n
+public","Type":"string","Summary":"/// \u003Csummary\u003E\r\n /// Project
+Description\r\n ///
+\u003C/summary\u003E"},{"Id":0,"Name":"Files","Modifier":"///
+\u003Csummary\u003E\r\n /// Gets or sets the collection of files associated with
+the Project.\r\n /// \u003C/summary\u003E\r\n
+public","Type":"List\u003CFileStructure\u003E","Summary":"///
+\u003Csummary\u003E\r\n /// Gets or sets the collection of files associated with
+the Project.\r\n ///
+\u003C/summary\u003E"}],"Type":"class","Summary":""}]},{"Id":1,"Name":"net10.0","UsingDirectives":[{"Id":1,"Name":"System"},{"Id":2,"Name":"Generic"},{"Id":3,"Name":"Text"}],"Classes":[{"Id":0,"Name":"SolutionStructure","Methods":[],"Fields":[{"Id":0,"Name":"Id","Modifier":"///
+\u003Csummary\u003E\r\n /// Gets or sets the ID of the Solution\r\n ///
+\u003C/summary\u003E\r\n public","Type":"int","Summary":"///
+\u003Csummary\u003E\r\n /// Gets or sets the ID of the Solution\r\n ///
+\u003C/summary\u003E"},{"Id":0,"Name":"Name","Modifier":"///
+\u003Csummary\u003E\r\n /// Gets or sets the name of the Solution\r\n ///
+\u003C/summary\u003E\r\n public","Type":"string","Summary":"///
+\u003Csummary\u003E\r\n /// Gets or sets the name of the Solution\r\n ///
+\u003C/summary\u003E"},{"Id":0,"Name":"Description","Modifier":"///
+\u003Csummary\u003E\r\n /// Gets or sets the description associated with the
+object.\r\n /// \u003C/summary\u003E\r\n public","Type":"string","Summary":"///
+\u003Csummary\u003E\r\n /// Gets or sets the description associated with the
+object.\r\n /// \u003C/summary\u003E"},{"Id":0,"Name":"Projects","Modifier":"///
+\u003Csummary\u003E\r\n /// Gets or sets the collection of projects within this
+solution\r\n /// \u003C/summary\u003E\r\n
+public","Type":"List\u003CProjectStructure\u003E","Summary":"///
+\u003Csummary\u003E\r\n /// Gets or sets the collection of projects within this
+solution\r\n ///
+\u003C/summary\u003E"}],"Type":"class","Summary":""}]},{"Id":1,"Name":"net10.0","UsingDirectives":[{"Id":1,"Name":"models"},{"Id":2,"Name":"Syntax"},{"Id":3,"Name":"System"},{"Id":4,"Name":"Generic"},{"Id":5,"Name":"Text"}],"Classes":[{"Id":0,"Name":"BaseParser","Methods":[{"Id":0,"Name":"Parse","Modifier":"public
+abstract","ReturnType":"T","Parameters":[],"Summary":""}],"Fields":[{"Id":0,"Name":"Name","Modifier":"///
+\u003Csummary\u003E\r\n /// Gets the name of the file associated with this
+instance.\r\n /// \u003C/summary\u003E\r\n public
+abstract","Type":"string","Summary":"/// \u003Csummary\u003E\r\n /// Gets the
+name of the file associated with this instance.\r\n ///
+\u003C/summary\u003E"}],"Type":"class","Summary":""}]},{"Id":1,"Name":"net10.0","UsingDirectives":[{"Id":1,"Name":"models"},{"Id":2,"Name":"CodeAnalysis"},{"Id":3,"Name":"CSharp"},{"Id":4,"Name":"Syntax"},{"Id":5,"Name":"System"},{"Id":6,"Name":"Generic"},{"Id":7,"Name":"Text"},{"Id":8,"Name":"Json"}],"Classes":[{"Id":0,"Name":"FileParser","Methods":[{"Id":0,"Name":"Parse","Modifier":"public
+override","ReturnType":"T","Parameters":[],"Summary":""},{"Id":0,"Name":"GetName","Modifier":"private","ReturnType":"string","Parameters":[{"Name":"nameSyntax","Modifier":"","Type":"NameSyntax?","Summary":""}],"Summary":""},{"Id":0,"Name":"GetClassDeclaration","Modifier":"private","ReturnType":"List\u003CClassStructure\u003E","Parameters":[{"Name":"root","Modifier":"","Type":"CompilationUnitSyntax","Summary":""}],"Summary":""}],"Fields":[{"Id":0,"Name":"Name","Modifier":"public
+override","Type":"string","Summary":""},{"Id":0,"Name":"FilePath","Modifier":"///
+\u003Csummary\u003E\r\n /// Gets the code associated with this instance.\r\n ///
+\u003C/summary\u003E\r\n public","Type":"string","Summary":"///
+\u003Csummary\u003E\r\n /// Gets the code associated with this instance.\r\n ///
+\u003C/summary\u003E"}],"Type":"class","Summary":"/// \u003Csummary\u003E\r\n
+/// Provides functionality to parse C# source code files and extract their
+structural information, such as using\r\n /// directives and class
+definitions.\r\n /// \u003C/summary\u003E\r\n /// \u003Cremarks\u003EUse this
+class to analyze the contents of a C# file by supplying its code and file name.
+The\r\n /// parser returns a structured representation of the file, which
+includes details about its using directives and\r\n /// classes. This class is
+not
+thread-safe.\u003C/remarks\u003E"}]},{"Id":1,"Name":"net10.0","UsingDirectives":[{"Id":1,"Name":"models"},{"Id":2,"Name":"CodeAnalysis"},{"Id":3,"Name":"CSharp"},{"Id":4,"Name":"Syntax"},{"Id":5,"Name":"System"},{"Id":6,"Name":"Generic"},{"Id":7,"Name":"Text"}],"Classes":[{"Id":0,"Name":"ProjectParser","Methods":[{"Id":0,"Name":"Parse","Modifier":"public
+override","ReturnType":"T","Parameters":[],"Summary":""}],"Fields":[{"Id":0,"Name":"Name","Modifier":"public
+override","Type":"string","Summary":""},{"Id":0,"Name":"FilePaths","Modifier":"public","Type":"string[]","Summary":""}],"Type":"class","Summary":""}]},{"Id":1,"Name":"net10.0","UsingDirectives":[{"Id":1,"Name":"models"},{"Id":2,"Name":"System"},{"Id":3,"Name":"Generic"},{"Id":4,"Name":"Text"}],"Classes":[{"Id":0,"Name":"SolutionParser","Methods":[{"Id":0,"Name":"Parse","Modifier":"public
+override","ReturnType":"T","Parameters":[],"Summary":""}],"Fields":[{"Id":0,"Name":"Name","Modifier":"public
+override","Type":"string","Summary":""}],"Type":"class","Summary":""}]}]}

@@ -25,7 +25,7 @@ def cli():
 @click.option('-f', '--file', help='Specific file to analyze')
 @click.option('-p', '--project', help='Project directory to analyze')
 @click.option('--json', 'output_json', is_flag=True, help='Output in JSON format')
-@click.option('--type', 'diagram_type', default='class', type=click.Choice(['class', 'flowchart', 'sequence']), help='Type of diagram to generate')
+@click.option('-t', '--type', 'diagram_type', default='class', type=click.Choice(['class', 'flowchart', 'sequence']), help='Type of diagram to generate')
 @click.option('-o', '--output', help='Output file path (saves as .mmd)')
 def uml(file, project, output_json, diagram_type, output):
     """Generate UML diagram (Mermaid format)."""

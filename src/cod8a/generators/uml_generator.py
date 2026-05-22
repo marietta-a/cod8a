@@ -1,3 +1,4 @@
+import re
 from typing import List, Union
 from enums.diagram_type import DiagramType
 from models.models import FileStructure, ProjectStructure, ClassStructure, Relationship
@@ -18,13 +19,37 @@ class UMLGenerator:
         
         if isinstance(structure, FileStructure):
             mermaid_lines.extend(self._generate_classes(structure.classes))
-            mermaid_lines.extend(self._generate_relationships(structure.relationships))
+            if hasattr(structure, 'relationships') and structure.relationships:
+                mermaid_lines.extend(self._generate_relationships(structure.relationships))
+            mermaid_lines.extend(self._infer_relationships(structure.classes))
         elif isinstance(structure, ProjectStructure):
+            all_classes = []
             for file in structure.files:
                 mermaid_lines.extend(self._generate_classes(file.classes))
-                mermaid_lines.extend(self._generate_relationships(file.relationships))
+                all_classes.extend(file.classes)
+                if hasattr(file, 'relationships') and file.relationships:
+                    mermaid_lines.extend(self._generate_relationships(file.relationships))
+            mermaid_lines.extend(self._infer_relationships(all_classes))
         
         return "\n".join(mermaid_lines)
+
+    def _infer_relationships(self, classes: List[ClassStructure]) -> List[str]:
+        lines = []
+        class_names = {c.name for c in classes}
+        for cls in classes:
+            for field in cls.fields:
+                field_type = field.type
+                # Extract type from generics, e.g., List<ClassStructure> -> ClassStructure
+                match = re.search(r'<([^>]+)>', field_type)
+                base_type = match.group(1) if match else field_type
+                # Remove arrays
+                base_type = base_type.replace('[]', '').strip()
+                
+                if base_type in class_names and base_type != cls.name:
+                    # Use composition/association connector
+                    connector = "--*" if "List" in field_type or "[]" in field_type else "-->"
+                    lines.append(f"    {cls.name} {connector} {base_type} : {field.name}")
+        return list(dict.fromkeys(lines)) # Remove duplicates
 
     def _generate_classes(self, classes: List[ClassStructure]) -> List[str]:
         lines = []
