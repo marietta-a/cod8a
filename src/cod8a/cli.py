@@ -2,6 +2,8 @@ import click
 import os
 import json
 from dataclasses import asdict
+
+from cod8a.generators.mermaid.class_diagram import convert_json_to_mermaid
 from .parsers.python_parser import PythonParser
 from .parsers.dotnet_parser import DotnetParser
 from .generators.uml_generator import UMLGenerator
@@ -45,26 +47,27 @@ def uml(file, project, output_json, diagram_type, output):
         else:
             struct = parser.parse()
 
-    if output_json:
-        if hasattr(struct, 'model_dump'):
-            print(json.dumps(struct.model_dump(), indent=2))
-        else:
-            print(json.dumps(asdict(struct), indent=2))
-        return
+    # if output_json:
+    #     if hasattr(struct, 'model_dump'):
+    #         print(json.dumps(struct.model_dump(), indent=2))
+    #     else:
+    #         print(json.dumps(asdict(struct), indent=2))
+    #     return
 
-    generator = UMLGenerator()
-    mermaid_diagram = generator.generate(struct, diagram_type=diagram_type)
+    # generator = UMLGenerator()
+    # mermaid_diagram = generator.generate(struct, diagram_type=diagram_type)
+    convert_json_to_mermaid(struct)
 
-    if output:
-        # Ensure directory exists
-        out_dir = os.path.dirname(output)
-        if out_dir:
-            os.makedirs(out_dir, exist_ok=True)
-        with open(output, "w", encoding="utf-8") as f:
-            f.write(mermaid_diagram)
-        print(f"Diagram saved to {output}")
-    else:
-        print(mermaid_diagram)
+    # if output:
+    #     # Ensure directory exists
+    #     out_dir = os.path.dirname(output)
+    #     if out_dir:
+    #         os.makedirs(out_dir, exist_ok=True)
+    #     with open(output, "w", encoding="utf-8") as f:
+    #         f.write(mermaid_diagram)
+    #     print(f"Diagram saved to {output}")
+    # else:
+    #     print(mermaid_diagram)
 
 @click.command()
 @click.option('-f', '--file', help='Specific file to document')
@@ -87,6 +90,8 @@ def doc_cli(file, project, output_json):
             struct = ProjectStructure(name=os.path.basename(project or os.getcwd()), files=files)
         else:
             struct = parser.parse(project or os.getcwd())
+
+    convert_json_to_mermaid(struct)
     
     return struct
 

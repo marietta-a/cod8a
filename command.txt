@@ -1,23 +1,10 @@
-I am working on a python, C# uml generator (extraction of mermaid code). I have
-a script that extracts the syntax tree from the code to json (sample attached)
-Generate SKILL.md files that can convert the json to flowchart, class diagram
-and sequence diagram codes. Commands: when the user specify cod8a uml -f
-fileName -t mermaidType (e.g flowchart, class diagram or sequence diagram) The
-correct skill is invoked. SKILL.md knows the location of the skill containing
-the generation of flowchart, skill for class diagram and skill for sequence
-diagram. It invokes the skill based on the type of diagram specified by -t
-mermaidType. I have a python script that generates the json (see the attached
-template as an example) from the file provided in -f fileName; this script is
-located in "src\cod8a\cli.py" The various commands are cod8a uml -f fileName -t
-mermaidType cod8a docs -f fileName where docs generate documentation for the
-file provided in -f fileName and uml generates the mermaid code for the file
-provided in -f fileName, based on the mermaid type provided in -t mermaidType
-From the above prompts, generate the Skills necessary to accomplish the task the
-skills should be (SKILL.md -> entry point, a folder called, mermaid that
-contains flowchart.md -> for flowchart, class.md -> for class diagram, and
-sequence.md -> for sequence diagram)
+Create a file in /src/generator/mermaid directory called class_diagram.py
+The class diagram should contain the grammar for converting json data (which has a template similar to the json sample posted below) to mermaid class classDiagram
+The file should contain all the grammar to generate a mermaid class diagram from the json data.
+Note: for inferences, the mermaid class diagram code below is the mermaid diagram for the json sample provided. Use that sample as a reference when converting from json to mermaid diagram.
+The class_diagram.py script should contain an optimal accuracy for converting from json to mermaid
 
-Json sample:
+### Json Sample:
 {"Id":1,"Name":"models","Description":null,"Files":[{"Id":1,"Name":"net10.0","UsingDirectives":[{"Id":1,"Name":"System"},{"Id":2,"Name":"IO"},{"Id":3,"Name":"Linq"},{"Id":4,"Name":"Json"},{"Id":5,"Name":"models"},{"Id":6,"Name":"Parsers"}],"Classes":[{"Id":0,"Name":"Program","Methods":[{"Id":0,"Name":"Main","Modifier":"static","ReturnType":"void","Parameters":[{"Name":"args","Modifier":"","Type":"string[]","Summary":""}],"Summary":""}],"Fields":[],"Type":"class","Summary":""}]},{"Id":1,"Name":"net10.0","UsingDirectives":[{"Id":1,"Name":"Syntax"},{"Id":2,"Name":"System"},{"Id":3,"Name":"Generic"},{"Id":4,"Name":"Text"}],"Classes":[{"Id":0,"Name":"FileStructure","Methods":[],"Fields":[{"Id":0,"Name":"Id","Modifier":"public","Type":"int","Summary":""},{"Id":0,"Name":"Name","Modifier":"///
 \u003Csummary\u003E\r\n /// \u003Csee langword=\u0022nameof\u0022/\u003Eof the
 namespace, e.g., \u003Cc\u003EMyNamespace\u003C/c\u003E.\r\n ///
@@ -240,3 +227,101 @@ override","ReturnType":"T","Parameters":[],"Summary":""}],"Fields":[{"Id":0,"Nam
 override","Type":"string","Summary":""},{"Id":0,"Name":"FilePaths","Modifier":"public","Type":"string[]","Summary":""}],"Type":"class","Summary":""}]},{"Id":1,"Name":"net10.0","UsingDirectives":[{"Id":1,"Name":"models"},{"Id":2,"Name":"System"},{"Id":3,"Name":"Generic"},{"Id":4,"Name":"Text"}],"Classes":[{"Id":0,"Name":"SolutionParser","Methods":[{"Id":0,"Name":"Parse","Modifier":"public
 override","ReturnType":"T","Parameters":[],"Summary":""}],"Fields":[{"Id":0,"Name":"Name","Modifier":"public
 override","Type":"string","Summary":""}],"Type":"class","Summary":""}]}]}
+
+
+### Mermaid class diagram code
+classDiagram
+    class SolutionStructure {
+        +int Id
+        +string Name
+        +string Description
+        +List<ProjectStructure> Projects
+    }
+
+    class ProjectStructure {
+        +int Id
+        +string Name
+        +string Description
+        +List<FileStructure> Files
+    }
+
+    class FileStructure {
+        +int Id
+        +string Name
+        +List<UsingDirective> UsingDirectives
+        +List<ClassStructure> Classes
+    }
+
+    class UsingDirective {
+        +int Id
+        +string Name
+    }
+
+    class ClassStructure {
+        +int Id
+        +string Name
+        +List<MethodStructure> Methods
+        +List<FieldStructure> Fields
+        +string Type
+        +string Summary
+    }
+
+    class MethodStructure {
+        +int Id
+        +string Name
+        +string Modifier
+        +string ReturnType
+        +List<ParameterStructure> Parameters
+        +string Summary
+    }
+
+    class FieldStructure {
+        +int Id
+        +string Name
+        +string Modifier
+        +string Type
+        +string Summary
+    }
+
+    class ParameterStructure {
+        +int Id
+        +string Name
+        +string Modifier
+        +string Type
+        +string Summary
+    }
+
+    class BaseParser {
+        +string Name
+        +T Parse()
+    }
+
+    class FileParser {
+        +string Name
+        +string FilePath
+        +T Parse()
+        -string GetName(NameSyntax? nameSyntax)
+        -List<ClassStructure> GetClassDeclaration(CompilationUnitSyntax root)
+    }
+
+    class ProjectParser {
+        +string Name
+        +string[] FilePaths
+        +T Parse()
+    }
+
+    class SolutionParser {
+        +string Name
+        +T Parse()
+    }
+
+    SolutionStructure --> ProjectStructure : contains
+    ProjectStructure --> FileStructure : contains
+    FileStructure --> UsingDirective : uses
+    FileStructure --> ClassStructure : contains
+    ClassStructure --> MethodStructure : contains
+    ClassStructure --> FieldStructure : contains
+    MethodStructure --> ParameterStructure : has
+    BaseParser <|-- FileParser
+    BaseParser <|-- ProjectParser
+    BaseParser <|-- SolutionParser
