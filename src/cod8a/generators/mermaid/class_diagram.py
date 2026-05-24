@@ -9,8 +9,8 @@ class ClassDiagramGenerator:
     Generates a Mermaid class diagram from a JSON representation of code structure.
     """
 
-    def generate(self, data: Union[FileStructure, ProjectStructure]) -> str:
-        if not isinstance(data, FileStructure | ProjectStructure):
+    def generate(self, data: Union[FileStructure, ProjectStructure, List[FileStructure]]) -> str:
+        if not isinstance(data, FileStructure | ProjectStructure | list):
                 return "Error: Invalid data structure"
 
         # files = self._extract_files(data)
@@ -48,9 +48,16 @@ class ClassDiagramGenerator:
                     if cls_name and cls_name not in seen_classes:
                         classes.append(cls)
                         seen_classes.add(cls_name)
-        if type(data) is ProjectStructure:
+        elif type(data) is list:
+            for file in data:
+                self._extract_classes(file, classes)
+        elif type(data) is ProjectStructure:
             for file in data.files:
               self._extract_classes(file, classes)
+        else:
+            print("Invalid file structure")
+            return 
+        
         return classes
 
     def _generate_class_block(self, cls: ClassStructure) -> List[str]:

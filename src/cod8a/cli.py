@@ -16,8 +16,9 @@ from .generators.doc_generator import DocGenerator
 DOTNET_ANALYZER_PATH = os.path.join(os.path.dirname(__file__), "dotnet", "CodeAnalysis", "CodeAnalyzer.csproj")
 
 def get_parser(path: str):
-    print(f"Checking path: {DOTNET_ANALYZER_PATH}")
-    if any(path.endswith(ext) for ext in [".cs", ".csproj", ".sln"]) or os.path.isdir(path) and any(f.endswith(".cs") for _, _, files in os.walk(path) for f in files):
+    print(f"Checking analyzer ...")
+    isDotnetParser = any(path.endswith(ext) for ext in [".cs", ".csproj", ".sln"]) or os.path.isdir(path) and any(f.endswith(".cs") for _, _, files in os.walk(path) for f in files) 
+    if isDotnetParser:
         return DotnetParser(DOTNET_ANALYZER_PATH)
     return PythonParser()
 
@@ -34,7 +35,7 @@ def cli():
 def uml(path, output_json, diagram_type, output):
     """Generate UML diagram (Mermaid format)."""
     target = path or os.getcwd()
-    struct = _extract_structure(path)
+    struct = _extract_structure(target)
 
     print(convert_json_to_mermaid(struct))
 
@@ -44,8 +45,9 @@ def uml(path, output_json, diagram_type, output):
 @click.option('--json', 'output_json', is_flag=True, help='Output in JSON format')
 def doc_cli(path, output_json):
     """Generate documentation (Markdown format)."""
+    target = path or os.getcwd()
+    struct = _extract_structure(target)
 
-    struct = _extract_structure(path)
 
 def _extract_structure(path) -> Union[FileStructure | ProjectStructure]:
 
