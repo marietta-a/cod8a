@@ -17,13 +17,12 @@ class ClassDiagramGenerator:
         classes = []
         all_classes = self._extract_classes(data, classes)
         mermaid_lines = ["classDiagram"]
-        
         # 1. Generate Class Definitions
         for cls in all_classes:
             mermaid_lines.extend(self._generate_class_block(cls))
         
         # 2. Generate Relationships
-        # mermaid_lines.extend(self._generate_relationships(all_classes))
+        mermaid_lines.extend(self._generate_relationships(all_classes))
         
         return "\n".join(mermaid_lines)
 
@@ -63,9 +62,9 @@ class ClassDiagramGenerator:
     def _generate_class_block(self, cls: ClassStructure) -> List[str]:
         lines = [f"    class {cls.name} {{"]
         
-        fields_to_show = self._get_fields_to_show(cls)
+        # fields_to_show = self._get_fields_to_show(cls)
         # Fields
-        for field in fields_to_show:
+        for field in cls.fields:
             f_name = field.name
             f_type = field.type
             f_mod = field.modifier.lower()
@@ -101,7 +100,7 @@ class ClassDiagramGenerator:
                 if p_name in existing_fields:
                     fields_to_show.append(existing_fields[p_name])
         else:
-            # No params in summary, use Fields list but filter out generic noise
+            # No params in summary
             for f in cls.fields:
                 fields_to_show.append(f)
         return fields_to_show
@@ -117,8 +116,51 @@ class ClassDiagramGenerator:
             return "~"
         return "+" # Default to public
 
+    def _generate_relationships(self, classes: List[ClassStructure]) -> List[str]:
+        rel_lines = []
+        class_names = {c.name for c in classes}
+        
+        for cls in classes:
+            cls_name = cls.name
+            
+            # 1. Composition/Association from Fields
+            fields_to_show = self._get_fields_to_show(cls)
+            for field in cls.fields:
+                
+                # Extract base type from List<T> or T[]
+                match = re.search(r'<([^>]+)>', field.type)
+                base_type = match.group(1) if match else field.type
+                base_type = base_type.replace('[]', '').strip()
+                for name in class_names:
+                    if name in base_type and cls_name not in base_type:
+                        connector = "-->"
+                        
+                        # Heuristic for labels based on sample
+                        label = "contains"
+                        if base_type == "UsingDirective":
+                            label = "uses"
+                        elif base_type == "ParameterStructure":
+                            label = "has"
+                        elif "List" not in field.type and "[]" not in field.type:
+                            label = "uses"
+                        # print(f"relationship: {cls_name} {connector} {base_type} : {label}")    
+                        rel_lines.append(f"    {cls_name} {connector} {name} : {label}")
+            
+            # 2. Inheritance (Heuristic for Parser types)
+            if "Parser" in cls_name and cls_name != "BaseParser":
+                # Check if it overrides Parse method which is abstract in BaseParser
+                has_override_parse = any(
+                    m.name == "Parse" and "override" in m.get("Modifier", "").lower()
+                    for m in cls.methods
+                )
+                if has_override_parse and "BaseParser" in class_names:
+                    rel_lines.append(f"    BaseParser <|-- {cls_name}")
+
+        return sorted(list(set(rel_lines)))
+
     # def _generate_relationships(self, classes: List[ClassStructure]) -> List[str]:
     #     rel_lines = []
+    #     print("relationships")
     #     class_names = {c.name for c in classes}
         
     #     for cls in classes:
@@ -134,6 +176,7 @@ class ClassDiagramGenerator:
     #             match = re.search(r'<([^>]+)>', f_type)
     #             base_type = match.group(1) if match else f_type
     #             base_type = base_type.replace('[]', '').strip()
+    #             print(base_type)
                 
     #             if base_type in class_names and base_type != cls_name:
     #                 connector = "-->"
@@ -160,6 +203,7 @@ class ClassDiagramGenerator:
     #                 rel_lines.append(f"    BaseParser <|-- {cls_name}")
 
     #     return sorted(list(set(rel_lines)))
+    
 
 def convert_json_to_mermaid(data: FileStructure | ProjectStructure) -> str:
     print("calling uml class generator ...")
