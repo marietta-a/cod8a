@@ -18,7 +18,7 @@ DOTNET_ANALYZER_PATH = os.path.join(os.path.dirname(__file__), "dotnet", "CodeAn
 def get_parser(path: str):
     print(f"Checking path: {DOTNET_ANALYZER_PATH}")
     if any(path.endswith(ext) for ext in [".cs", ".csproj", ".sln"]) or os.path.isdir(path) and any(f.endswith(".cs") for _, _, files in os.walk(path) for f in files):
-        return DotnetParser(DOTNET_ANALYZER_PATH, path)
+        return DotnetParser(DOTNET_ANALYZER_PATH)
     return PythonParser()
 
 @click.group()
@@ -34,30 +34,10 @@ def cli():
 def uml(path, output_json, diagram_type, output):
     """Generate UML diagram (Mermaid format)."""
     target = path or os.getcwd()
-    # parser = get_parser(target)
     struct = _extract_structure(path)
 
-    # if output_json:
-    #     if hasattr(struct, 'model_dump'):
-    #         print(json.dumps(struct.model_dump(), indent=2))
-    #     else:
-    #         print(json.dumps(asdict(struct), indent=2))
-    #     return
-
-    # generator = UMLGenerator()
-    # mermaid_diagram = generator.generate(struct, diagram_type=diagram_type)
     print(convert_json_to_mermaid(struct))
 
-    # if output:
-    #     # Ensure directory exists
-    #     out_dir = os.path.dirname(output)
-    #     if out_dir:
-    #         os.makedirs(out_dir, exist_ok=True)
-    #     with open(output, "w", encoding="utf-8") as f:
-    #         f.write(mermaid_diagram)
-    #     print(f"Diagram saved to {output}")
-    # else:
-    #     print(mermaid_diagram)
 
 @click.command()
 @click.option('-p', '--path', help='Specific path of file(s) to analyze')
@@ -66,12 +46,6 @@ def doc_cli(path, output_json):
     """Generate documentation (Markdown format)."""
 
     struct = _extract_structure(path)
-
-    # if output_json:
-    #     print(json.dumps(asdict(struct), indent=2))
-    # else:
-    #     generator = DocGenerator()
-    #     print(generator.generate(struct))
 
 def _extract_structure(path) -> Union[FileStructure | ProjectStructure]:
 

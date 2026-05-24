@@ -23,7 +23,7 @@ class ClassDiagramGenerator:
             mermaid_lines.extend(self._generate_class_block(cls))
         
         # 2. Generate Relationships
-        mermaid_lines.extend(self._generate_relationships(all_classes))
+        # mermaid_lines.extend(self._generate_relationships(all_classes))
         
         return "\n".join(mermaid_lines)
 
@@ -57,7 +57,6 @@ class ClassDiagramGenerator:
         lines = [f"    class {cls.name} {{"]
         
         fields_to_show = self._get_fields_to_show(cls)
-
         # Fields
         for field in fields_to_show:
             f_name = field.name
@@ -94,34 +93,9 @@ class ClassDiagramGenerator:
             for p_name in params:
                 if p_name in existing_fields:
                     fields_to_show.append(existing_fields[p_name])
-                else:
-                    # Infer type for param not in Fields list
-                    p_type = "string" # Default
-                    if p_name == "Methods": p_type = "List<MethodStructure>"
-                    elif p_name == "Fields": p_type = "List<FieldStructure>"
-                    elif p_name == "Parameters": p_type = "List<ParameterStructure>"
-                    elif p_name == "Projects": p_type = "List<ProjectStructure>"
-                    elif p_name == "Files": p_type = "List<FileStructure>"
-                    elif p_name == "Classes": p_type = "List<ClassStructure>"
-                    elif p_name == "UsingDirectives": p_type = "List<UsingDirective>"
-                    elif p_name == "Id": p_type = "int"
-                    
-                    fields_to_show.append({
-                        "Name": p_name,
-                        "Type": p_type,
-                        "Modifier": "public"
-                    })
         else:
             # No params in summary, use Fields list but filter out generic noise
             for f in cls.fields:
-                f_name = f.name
-                f_summary = f.summary
-                
-                # Filter out generic noise (erroneously added fields in some parsers)
-                if f_name in ["UsingDirectives", "Classes"] and cls.name not in ["FileStructure"]:
-                    if "Gets or sets the collection of" in f_summary:
-                        continue
-                
                 fields_to_show.append(f)
         return fields_to_show
 
@@ -136,49 +110,49 @@ class ClassDiagramGenerator:
             return "~"
         return "+" # Default to public
 
-    def _generate_relationships(self, classes: List[ClassStructure]) -> List[str]:
-        rel_lines = []
-        class_names = {c.name for c in classes}
+    # def _generate_relationships(self, classes: List[ClassStructure]) -> List[str]:
+    #     rel_lines = []
+    #     class_names = {c.name for c in classes}
         
-        for cls in classes:
-            cls_name = cls.name
+    #     for cls in classes:
+    #         cls_name = cls.name
             
-            # 1. Composition/Association from Fields
-            fields_to_show = self._get_fields_to_show(cls)
-            for field in fields_to_show:
-                f_type = field.type
-                f_name = field.name
+    #         # 1. Composition/Association from Fields
+    #         fields_to_show = self._get_fields_to_show(cls)
+    #         for field in fields_to_show:
+    #             f_type = field.type
+    #             f_name = field.name
                 
-                # Extract base type from List<T> or T[]
-                match = re.search(r'<([^>]+)>', f_type)
-                base_type = match.group(1) if match else f_type
-                base_type = base_type.replace('[]', '').strip()
+    #             # Extract base type from List<T> or T[]
+    #             match = re.search(r'<([^>]+)>', f_type)
+    #             base_type = match.group(1) if match else f_type
+    #             base_type = base_type.replace('[]', '').strip()
                 
-                if base_type in class_names and base_type != cls_name:
-                    connector = "-->"
+    #             if base_type in class_names and base_type != cls_name:
+    #                 connector = "-->"
                     
-                    # Heuristic for labels based on sample
-                    label = "contains"
-                    if base_type == "UsingDirective":
-                        label = "uses"
-                    elif base_type == "ParameterStructure":
-                        label = "has"
-                    elif "List" not in f_type and "[]" not in f_type:
-                        label = "uses"
+    #                 # Heuristic for labels based on sample
+    #                 label = "contains"
+    #                 if base_type == "UsingDirective":
+    #                     label = "uses"
+    #                 elif base_type == "ParameterStructure":
+    #                     label = "has"
+    #                 elif "List" not in f_type and "[]" not in f_type:
+    #                     label = "uses"
                         
-                    rel_lines.append(f"    {cls_name} {connector} {base_type} : {label}")
+    #                 rel_lines.append(f"    {cls_name} {connector} {base_type} : {label}")
             
-            # 2. Inheritance (Heuristic for Parser types)
-            if "Parser" in cls_name and cls_name != "BaseParser":
-                # Check if it overrides Parse method which is abstract in BaseParser
-                has_override_parse = any(
-                    m.name == "Parse" and "override" in m.get("Modifier", "").lower()
-                    for m in cls.methods
-                )
-                if has_override_parse and "BaseParser" in class_names:
-                    rel_lines.append(f"    BaseParser <|-- {cls_name}")
+    #         # 2. Inheritance (Heuristic for Parser types)
+    #         if "Parser" in cls_name and cls_name != "BaseParser":
+    #             # Check if it overrides Parse method which is abstract in BaseParser
+    #             has_override_parse = any(
+    #                 m.name == "Parse" and "override" in m.get("Modifier", "").lower()
+    #                 for m in cls.methods
+    #             )
+    #             if has_override_parse and "BaseParser" in class_names:
+    #                 rel_lines.append(f"    BaseParser <|-- {cls_name}")
 
-        return sorted(list(set(rel_lines)))
+    #     return sorted(list(set(rel_lines)))
 
 def convert_json_to_mermaid(data: FileStructure | ProjectStructure) -> str:
     print("calling uml class generator ...")
