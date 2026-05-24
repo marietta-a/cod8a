@@ -1,10 +1,10 @@
 import ast
 import json
 import os
-from typing import List
+from typing import List, Union
 from models.models import (
     FileStructure, ClassStructure, MethodStructure, 
-    FieldStructure, ParameterStructure, UsingDirective
+    FieldStructure, ParameterStructure, ProjectStructure, UsingDirective
 )
 from dataclasses import asdict
 
@@ -110,3 +110,10 @@ class PythonParser:
                 if filename.endswith(".py"):
                     files.append(self.parse_file(os.path.join(root, filename)))
         return files
+    
+    def parse(self, path: str) -> Union[FileStructure | ProjectStructure | List[FileStructure]]:
+        isFile = os.path.isfile(path)
+        if isFile:
+            return self.parse_file(path)
+        else:
+            return self.parse_project(path)

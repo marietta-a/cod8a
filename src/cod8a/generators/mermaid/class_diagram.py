@@ -14,8 +14,8 @@ class ClassDiagramGenerator:
                 return "Error: Invalid data structure"
 
         # files = self._extract_files(data)
-        
-        all_classes = self._extract_classes(data)
+        classes = []
+        all_classes = self._extract_classes(data, classes)
         mermaid_lines = ["classDiagram"]
         
         # 1. Generate Class Definitions
@@ -39,8 +39,7 @@ class ClassDiagramGenerator:
                 
         return files
 
-    def _extract_classes(self, data: Union[FileStructure | ProjectStructure]) -> List[Dict[str, Any]]:
-        classes = []
+    def _extract_classes(self, data: Union[FileStructure | ProjectStructure], classes: list[ClassStructure]) -> List[ClassStructure]:
         seen_classes = set()
         if type(data) is FileStructure:
             for cls in data.classes:
@@ -49,9 +48,9 @@ class ClassDiagramGenerator:
                     if cls_name and cls_name not in seen_classes:
                         classes.append(cls)
                         seen_classes.add(cls_name)
-        if data is ProjectStructure:
-            if "files" in data:
-                self._extract_classes(data["files"])
+        if type(data) is ProjectStructure:
+            for file in data.files:
+              self._extract_classes(file, classes)
         return classes
 
     def _generate_class_block(self, cls: ClassStructure) -> List[str]:

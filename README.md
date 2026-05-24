@@ -16,10 +16,7 @@ Generate Mermaid class diagrams:
 
 ```bash
 # Analyze a specific file
-cod8a uml -f path/to/file.py
-
-# Analyze a .NET project
-cod8a uml -p path/to/dotnet/project
+cod8a uml -f path/to/file(s)
 ```
 
 ### Documentation
@@ -28,10 +25,8 @@ Generate Markdown documentation:
 
 ```bash
 # Using cod8a doc command
-cod8a doc -p path/to/project
+cod8a doc -p path/to/file(s)
 
-# Using the dedicated cde8a command
-cde8a -p path/to/project
 ```
 
 ## Features
