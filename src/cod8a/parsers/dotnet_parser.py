@@ -29,7 +29,6 @@ class DotnetParser:
             raise Exception(f"Could not find JSON in dotnet analyzer output: {result.stdout}")
 
         data = json.loads(json_str)
-        print(data)
         
         if "Files" in data:
             return self._map_project(data)

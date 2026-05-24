@@ -56,7 +56,7 @@ def uml(file, project, output_json, diagram_type, output):
 
     # generator = UMLGenerator()
     # mermaid_diagram = generator.generate(struct, diagram_type=diagram_type)
-    convert_json_to_mermaid(struct)
+    print(convert_json_to_mermaid(struct))
 
     # if output:
     #     # Ensure directory exists
@@ -91,7 +91,7 @@ def doc_cli(file, project, output_json):
         else:
             struct = parser.parse(project or os.getcwd())
 
-    convert_json_to_mermaid(struct)
+    # print(convert_json_to_mermaid(struct))
     
     return struct
 

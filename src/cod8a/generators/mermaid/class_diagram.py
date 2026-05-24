@@ -2,21 +2,20 @@ import json
 import re
 from typing import List, Dict, Any, Union
 
+from models.models import ClassStructure, FieldStructure, FileStructure, ProjectStructure
+
 class ClassDiagramGenerator:
     """
     Generates a Mermaid class diagram from a JSON representation of code structure.
     """
 
-    def generate(self, data: Union[str, Dict[str, Any]]) -> str:
-        if isinstance(data, str):
-            try:
-                data = json.loads(data, strict=False)
-            except json.JSONDecodeError:
-                return "Error: Invalid JSON data"
+    def generate(self, data: Union[FileStructure, ProjectStructure]) -> str:
+        if not isinstance(data, FileStructure | ProjectStructure):
+                return "Error: Invalid data structure"
 
-        files = self._extract_files(data)
-        all_classes = self._extract_classes(files)
+        # files = self._extract_files(data)
         
+        all_classes = self._extract_classes(data)
         mermaid_lines = ["classDiagram"]
         
         # 1. Generate Class Definitions
@@ -28,57 +27,56 @@ class ClassDiagramGenerator:
         
         return "\n".join(mermaid_lines)
 
-    def _extract_files(self, data: Dict[str, Any]) -> List[Dict[str, Any]]:
-        files = []
-        if isinstance(data, dict):
-            if "Files" in data:
-                files.extend(data["Files"])
+    def _extract_files(self, data: Union[FileStructure | ProjectStructure]) -> List[Union[FileStructure | ProjectStructure]]:
+        files : list[FileStructure] = []
+        if isinstance(data, FileStructure):
+            if "files" in data:
+                for file in data["files"]:
+                    files.extend(file)
             
-            if "Projects" in data:
-                for project in data["Projects"]:
-                    files.extend(self._extract_files(project))
-        elif isinstance(data, list):
-            for item in data:
-                files.extend(self._extract_files(item))
+            else:
+                files.extend(data)
                 
         return files
 
-    def _extract_classes(self, files: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    def _extract_classes(self, data: Union[FileStructure | ProjectStructure]) -> List[Dict[str, Any]]:
         classes = []
         seen_classes = set()
-        for file in files:
-            if "Classes" in file:
-                for cls in file["Classes"]:
-                    cls_name = cls.get("Name")
+        if type(data) is FileStructure:
+            for cls in data.classes:
+                for cls in data.classes:
+                    cls_name = cls.name
                     if cls_name and cls_name not in seen_classes:
                         classes.append(cls)
                         seen_classes.add(cls_name)
+        if data is ProjectStructure:
+            if "files" in data:
+                self._extract_classes(data["files"])
         return classes
 
-    def _generate_class_block(self, cls: Dict[str, Any]) -> List[str]:
-        name = cls.get("Name", "Unknown")
-        lines = [f"    class {name} {{"]
+    def _generate_class_block(self, cls: ClassStructure) -> List[str]:
+        lines = [f"    class {cls.name} {{"]
         
         fields_to_show = self._get_fields_to_show(cls)
 
         # Fields
         for field in fields_to_show:
-            f_name = field.get("Name", "")
-            f_type = field.get("Type", "")
-            f_mod = field.get("Modifier", "").lower()
+            f_name = field.name
+            f_type = field.type
+            f_mod = field.modifier.lower()
             
             visibility = self._get_visibility(f_mod)
             lines.append(f"        {visibility}{f_type} {f_name}")
             
         # Methods
-        for method in cls.get("Methods", []):
-            m_name = method.get("Name", "")
-            m_type = method.get("ReturnType", "void")
-            m_mod = method.get("Modifier", "").lower()
+        for method in cls.methods:
+            m_name = method.name
+            m_type = method.return_type if method.return_type else "void"
+            m_mod = method.modifier.lower()
             
             visibility = self._get_visibility(m_mod)
-            params_list = method.get("Parameters", [])
-            param_str = ", ".join([f"{p.get('Type')} {p.get('Name')}" for p in params_list])
+            params_list = method.parameters
+            param_str = ", ".join([f"{p.type} {p.name}" for p in params_list])
             
             lines.append(f"        {visibility}{m_type} {m_name}({param_str})")
             
@@ -86,14 +84,12 @@ class ClassDiagramGenerator:
         lines.append("")
         return lines
 
-    def _get_fields_to_show(self, cls: Dict[str, Any]) -> List[Dict[str, Any]]:
-        name = cls.get("Name", "Unknown")
-        summary = cls.get("Summary", "")
+    def _get_fields_to_show(self, cls: ClassStructure) -> List[FieldStructure]:
         # Try to find <param name="xxx"> tags which are common in C# records
-        params = re.findall(r'<param[\s\n\r]+name\s*=\s*["\\]+([^"\\]+)["\\]+', summary, re.IGNORECASE)
+        params = re.findall(r'<param[\s\n\r]+name\s*=\s*["\\]+([^"\\]+)["\\]+', cls.summary, re.IGNORECASE)
 
         fields_to_show = []
-        existing_fields = {f.get("Name"): f for f in cls.get("Fields", [])}
+        existing_fields = {f.name: f for f in cls.fields}
         
         if params:
             for p_name in params:
@@ -118,12 +114,12 @@ class ClassDiagramGenerator:
                     })
         else:
             # No params in summary, use Fields list but filter out generic noise
-            for f in cls.get("Fields", []):
-                f_name = f.get("Name")
-                f_summary = f.get("Summary", "")
+            for f in cls.fields:
+                f_name = f.name
+                f_summary = f.summary
                 
                 # Filter out generic noise (erroneously added fields in some parsers)
-                if f_name in ["UsingDirectives", "Classes"] and name not in ["FileStructure"]:
+                if f_name in ["UsingDirectives", "Classes"] and cls.name not in ["FileStructure"]:
                     if "Gets or sets the collection of" in f_summary:
                         continue
                 
@@ -141,18 +137,18 @@ class ClassDiagramGenerator:
             return "~"
         return "+" # Default to public
 
-    def _generate_relationships(self, classes: List[Dict[str, Any]]) -> List[str]:
+    def _generate_relationships(self, classes: List[ClassStructure]) -> List[str]:
         rel_lines = []
-        class_names = {c.get("Name") for c in classes}
+        class_names = {c.name for c in classes}
         
         for cls in classes:
-            cls_name = cls.get("Name")
+            cls_name = cls.name
             
             # 1. Composition/Association from Fields
             fields_to_show = self._get_fields_to_show(cls)
             for field in fields_to_show:
-                f_type = field.get("Type", "")
-                f_name = field.get("Name", "")
+                f_type = field.type
+                f_name = field.name
                 
                 # Extract base type from List<T> or T[]
                 match = re.search(r'<([^>]+)>', f_type)
@@ -177,17 +173,18 @@ class ClassDiagramGenerator:
             if "Parser" in cls_name and cls_name != "BaseParser":
                 # Check if it overrides Parse method which is abstract in BaseParser
                 has_override_parse = any(
-                    m.get("Name") == "Parse" and "override" in m.get("Modifier", "").lower()
-                    for m in cls.get("Methods", [])
+                    m.name == "Parse" and "override" in m.get("Modifier", "").lower()
+                    for m in cls.methods
                 )
                 if has_override_parse and "BaseParser" in class_names:
                     rel_lines.append(f"    BaseParser <|-- {cls_name}")
 
         return sorted(list(set(rel_lines)))
 
-def convert_json_to_mermaid(json_str: str) -> str:
+def convert_json_to_mermaid(data: FileStructure | ProjectStructure) -> str:
+    print("calling uml class generator ...")
     generator = ClassDiagramGenerator()
-    return generator.generate(json_str)
+    return generator.generate(data)
 
 if __name__ == "__main__":
     import sys

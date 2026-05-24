@@ -30,8 +30,6 @@ class PythonParser:
             elif isinstance(node, ast.ClassDef):
                 file_struct.classes.append(self._parse_class(node))
         
-        data = file_struct.model_dump_json()
-        print(data)
         return file_struct
 
     def _parse_import(self, node) -> List[UsingDirective]:
