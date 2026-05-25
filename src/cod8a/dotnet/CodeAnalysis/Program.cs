@@ -2,7 +2,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
-using CodeAnalyzer.models;
+using CodeAnalyzer.Models;
 using CodeAnalyzer.Parsers;
 
 class Program

@@ -13,9 +13,11 @@ class DotnetParser:
         self.analyzer_path = analyzer_path
 
     def parse(self, path: str) -> Union[FileStructure, ProjectStructure]:
-        args = ["dotnet", "run", "--project", self.analyzer_path, "--", path]
+        abs_path = os.path.abspath(path)
+        args = ["dotnet", "run", "--project", self.analyzer_path, "--", abs_path]
+        cwd = os.path.dirname(self.analyzer_path)
 
-        result = subprocess.run(args, capture_output=True, text=True)
+        result = subprocess.run(args, capture_output=True, text=True, cwd=cwd)
         if result.returncode != 0:
             raise Exception(f"Dotnet analyzer failed: {result.stderr}")
 

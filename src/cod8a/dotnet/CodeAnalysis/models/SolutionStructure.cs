@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace CodeAnalyzer.models
+namespace CodeAnalyzer.Models
 {
     public  class SolutionStructure
     {

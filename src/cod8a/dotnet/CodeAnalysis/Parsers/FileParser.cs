@@ -1,4 +1,4 @@
-using CodeAnalyzer.models;
+using CodeAnalyzer.Models;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -88,12 +88,12 @@ namespace CodeAnalyzer.Parsers
             try
             {
                 var typeDeclarationSyntaxes = root.DescendantNodes().OfType<TypeDeclarationSyntax>();
-                var fieldStructures = new List<FieldStructure>();
 
                 foreach (var classDeclaration in typeDeclarationSyntaxes)
                 {
                     var methodStructures = new List<MethodStructure>();
                     var parameterStructures = new List<ParameterStructure>();
+                    var fieldStructures = new List<FieldStructure>();
 
                     var relationships = new List<RelationShip>();
 
@@ -117,12 +117,19 @@ namespace CodeAnalyzer.Parsers
                         );
                     }
 
-
+                    // Extract standard fields and properties
                     fieldStructures.AddRange(classDeclaration.DescendantNodes().OfType<FieldDeclarationSyntax>().Select(f => new FieldStructure(default, f.Declaration.Variables.First().Identifier.Text, f.Modifiers.ToFullString().Trim(), f.Declaration.Type.ToString(), f.GetLeadingTrivia().ToString().Trim())));
                     fieldStructures.AddRange(classDeclaration.DescendantNodes().OfType<PropertyDeclarationSyntax>().Select(f => new FieldStructure(default, f.Identifier.Text, f.Modifiers.ToFullString().Trim(), f.Type.ToString(), f.GetLeadingTrivia().ToString().Trim())));
+                    
+                    // Extract record positional parameters as properties
+                    if (classDeclaration is RecordDeclarationSyntax recordDecl && recordDecl.ParameterList != null)
+                    {
+                        fieldStructures.AddRange(recordDecl.ParameterList.Parameters.Select(p => new FieldStructure(default, p.Identifier.Text, "public", p.Type?.ToString() ?? "", p.GetLeadingTrivia().ToString().Trim())));
+                    }
+
                     foreach (var method in classDeclaration.Members.OfType<MethodDeclarationSyntax>())
                     {
-                        var parameters = method.ParameterList.Parameters.Select(p => new ParameterStructure(p.Identifier.Text, p.Modifiers.ToFullString().Trim(), p.Type.ToString(), p.GetLeadingTrivia().ToString().Trim())).ToList();
+                        var parameters = method.ParameterList.Parameters.Select(p => new ParameterStructure(p.Identifier.Text, p.Modifiers.ToFullString().Trim(), p.Type?.ToString() ?? "", p.GetLeadingTrivia().ToString().Trim())).ToList();
                         parameterStructures.AddRange(parameters);
 
                         methodStructures.Add(new MethodStructure(default, method.Identifier.Text, method.Modifiers.ToFullString().Trim(), method.ReturnType.ToString(), parameters, method.GetLeadingTrivia().ToString().Trim()));
@@ -139,4 +146,5 @@ namespace CodeAnalyzer.Parsers
         }
     }
 }
+
 

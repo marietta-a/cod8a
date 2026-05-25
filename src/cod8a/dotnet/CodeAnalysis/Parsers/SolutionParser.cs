@@ -1,4 +1,4 @@
-﻿using CodeAnalyzer.models;
+﻿using CodeAnalyzer.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;

@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace CodeAnalyzer.models
+namespace CodeAnalyzer.Models
 {
     /// <summary>
     /// Represents the structure of a file, including its identifier and associated namespace details.

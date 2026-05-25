@@ -1,3 +1,3 @@
 """
-Module for Code Visualization CLI
+CLI for Code Visualization and Documentation
 """
