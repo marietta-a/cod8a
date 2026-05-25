@@ -1,3 +1,4 @@
+from ast import List
 from typing import Union
 
 import click
@@ -117,7 +118,7 @@ def doc_cli(path, output_json):
     struct = _extract_structure(target)
 
 
-def _extract_structure(path) -> Union[FileStructure | ProjectStructure]:
+def _extract_structure(path) -> Union[FileStructure | ProjectStructure | List[FileStructure]]:
 
     target = path or os.getcwd()
     parser = get_parser(target)
