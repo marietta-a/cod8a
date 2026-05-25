@@ -59,16 +59,13 @@ def uml(path, diagram_type, output_json, output):
         
     print(diagram)
     
-    # Automatically save to docs/mermaid
-    _save_diagram_to_docs(struct, canon_type, diagram)
+    # Save diagram
+    _save_diagram(struct, canon_type, diagram, output, path)
 
-def _save_diagram_to_docs(struct, canon_type, content):
-    """Helper to save mermaid diagram to docs/mermaid/{type}/{Name}.mmd"""
+def _save_diagram(struct, canon_type, content, output=None, path=None):
+    """Helper to save mermaid diagram."""
     try:
-        # Determine project root
-        project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
-        docs_dir = os.path.join(project_root, "docs", "mermaid", canon_type)
-        os.makedirs(docs_dir, exist_ok=True)
+        file_path = None
         
         # Prepare filename (PascalCase)
         raw_name = getattr(struct, "name", "diagram")
@@ -79,14 +76,36 @@ def _save_diagram_to_docs(struct, canon_type, content):
         if not pascal_name:
             pascal_name = "GeneratedDiagram"
             
-        file_path = os.path.join(docs_dir, f"{pascal_name}.mmd")
+        # Append diagram type suffix
+        suffix_map = {"class": "Class", "flowchart": "Flowchart", "sequence": "Sequence"}
+        pascal_name += suffix_map.get(canon_type, "")
+
+        if output:
+            # If output is a directory, use it as base
+            if os.path.isdir(output):
+                file_path = os.path.join(output, f"{pascal_name}.mmd")
+            else:
+                # If output is a file path, use it, ensuring .mmd extension
+                file_path = output
+                if not file_path.endswith(".mmd"):
+                    file_path += ".mmd"
+        else:
+            # If no output provided, prompt the user
+            if click.confirm("\nDo you want to save the diagram to a file?", default=True):
+                # Save in docs/mermaid at project root
+                project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+                save_dir = os.path.join(project_root, "docs", "mermaid")
+                file_path = os.path.join(save_dir, f"{pascal_name}.mmd")
         
-        with open(file_path, "w") as f:
-            f.write(content)
+        if file_path:
+            # Ensure the directory exists
+            os.makedirs(os.path.dirname(os.path.abspath(file_path)), exist_ok=True)
+            with open(file_path, "w") as f:
+                f.write(content)
+            click.echo(f"Diagram exported to: {file_path}")
             
-        click.echo(f"Diagram exported to: {file_path}")
     except Exception as e:
-        click.echo(f"Warning: Could not export diagram to docs: {e}")
+        click.echo(f"Warning: Could not export diagram: {e}")
 
 # TODO Generating code documentation 
 @click.command()
