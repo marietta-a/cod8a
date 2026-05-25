@@ -163,7 +163,7 @@ class ClassDiagramGenerator:
 
         return sorted(list(set(rel_lines)))
 
-def convert_json_to_mermaid(data: FileStructure | ProjectStructure) -> str:
+def convert_json_to_mermaid_class(data: FileStructure | ProjectStructure) -> str:
     print("calling uml class generator ...")
     generator = ClassDiagramGenerator()
     return generator.generate(data)
@@ -172,4 +172,4 @@ if __name__ == "__main__":
     import sys
     if len(sys.argv) > 1:
         with open(sys.argv[1], 'r') as f:
-            print(convert_json_to_mermaid(f.read()))
+            print(convert_json_to_mermaid_class(f.read()))

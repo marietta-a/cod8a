@@ -5,7 +5,10 @@ import os
 import json
 from dataclasses import asdict
 
-from cod8a.generators.mermaid.class_diagram import convert_json_to_mermaid
+from cod8a.generators.mermaid.class_diagram import convert_json_to_mermaid_class
+from cod8a.generators.mermaid.flowchart_diagram import convert_json_to_mermaid_flowchart
+from cod8a.generators.mermaid.sequence_diagram import convert_json_to_mermaid_sequence
+from enums.diagram_type import DiagramType
 from models.models import FileStructure, ProjectStructure
 from .parsers.python_parser import PythonParser
 from .parsers.dotnet_parser import DotnetParser
@@ -28,15 +31,22 @@ def cli():
 # Generation of UML Diagrams
 @cli.command()
 @click.option('-p', '--path', help='Specific path of file(s) to analyze')
+@click.option('-t', '--type', 'diagram_type', default='class', type=click.Choice([DiagramType.CLASS.value, DiagramType.SEQUENCE.value, DiagramType.FLOWCHART.value]), help='Type of diagram to generate')
 @click.option('--json', 'output_json', is_flag=True, help='Output in JSON format')
-@click.option('-t', '--type', 'diagram_type', default='class', type=click.Choice(['class', 'flowchart', 'sequence']), help='Type of diagram to generate')
 @click.option('-o', '--output', help='Output file path (saves as .mmd)')
-def uml(path, output_json, diagram_type, output):
+def uml(path, diagram_type, output_json, output):
     """Generate UML diagram (Mermaid format)."""
     target = path or os.getcwd()
     struct = _extract_structure(target)
 
-    print(convert_json_to_mermaid(struct))
+    if diagram_type == DiagramType.FLOWCHART.value:
+        diagram = convert_json_to_mermaid_flowchart(struct)
+    elif diagram_type == DiagramType.SEQUENCE.value:
+        diagram = convert_json_to_mermaid_sequence(struct)
+    else:
+        diagram = convert_json_to_mermaid_class(struct)
+        
+    print(diagram)
 
 # TODO Generating code documentation 
 @click.command()
