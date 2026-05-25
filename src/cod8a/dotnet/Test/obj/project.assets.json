@@ -1315,9 +1315,9 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/akumbom/Desktop/Projects/opensource/cod8a/src/cod8a/dotnet/Test/MermaidTests.csproj",
-      "projectName": "MermaidTests",
-      "projectPath": "/Users/akumbom/Desktop/Projects/opensource/cod8a/src/cod8a/dotnet/Test/MermaidTests.csproj",
+      "projectUniqueName": "/Users/akumbom/Desktop/Projects/opensource/cod8a/src/cod8a/dotnet/Test/CodeAnalysis.csproj",
+      "projectName": "CodeAnalysis",
+      "projectPath": "/Users/akumbom/Desktop/Projects/opensource/cod8a/src/cod8a/dotnet/Test/CodeAnalysis.csproj",
       "packagesPath": "/Users/akumbom/.nuget/packages/",
       "outputPath": "/Users/akumbom/Desktop/Projects/opensource/cod8a/src/cod8a/dotnet/Test/obj/",
       "projectStyle": "PackageReference",

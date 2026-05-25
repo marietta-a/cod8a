@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "p5DQ8kykfT4=",
+  "dgSpecHash": "1GZJL/2Tho8=",
   "success": true,
-  "projectFilePath": "/Users/akumbom/Desktop/Projects/opensource/cod8a/src/cod8a/dotnet/Test/MermaidTests.csproj",
+  "projectFilePath": "/Users/akumbom/Desktop/Projects/opensource/cod8a/src/cod8a/dotnet/Test/CodeAnalysis.csproj",
   "expectedPackageFiles": [
     "/Users/akumbom/.nuget/packages/coverlet.collector/6.0.4/coverlet.collector.6.0.4.nupkg.sha512",
     "/Users/akumbom/.nuget/packages/microsoft.codeanalysis.analyzers/5.3.0-2.25625.1/microsoft.codeanalysis.analyzers.5.3.0-2.25625.1.nupkg.sha512",

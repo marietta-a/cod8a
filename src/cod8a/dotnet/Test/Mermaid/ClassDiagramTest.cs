@@ -7,7 +7,7 @@ using CodeAnalyzer.Models;
 
 namespace MermaidTests.Mermaid
 {
-    public class MermaidDataTests
+    public class ClassDiagramTest
     {
         [Fact]
         public void Parse_GeneratesCorrectRelationshipsForMermaid()
@@ -28,7 +28,7 @@ namespace MermaidTests.Mermaid
                     public Employee Employee;
                 }
             }";
-            
+
             var filePath = Path.GetTempFileName() + ".cs";
             File.WriteAllText(filePath, testCode);
 
@@ -45,7 +45,7 @@ namespace MermaidTests.Mermaid
 
                 // Assert
                 Assert.NotNull(result);
-                
+
                 var employeeClass = result.Classes.First(c => c.Name == "Employee");
                 var managerClass = result.Classes.First(c => c.Name == "Manager");
 
@@ -68,3 +68,4 @@ namespace MermaidTests.Mermaid
         }
     }
 }
+
