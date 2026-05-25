@@ -26,10 +26,6 @@ namespace CodeAnalyzer.models
         /// </summary>
         public List<ClassStructure> Classes { get; set; }
 
-        /// <summary>
-        /// Gets or sets the collection of relationships associated with the entity.
-        /// </summary>
-        public List<RelationShip> Relationships { get; set; }
     }
 
     /// <summary>
@@ -51,8 +47,9 @@ namespace CodeAnalyzer.models
     /// <param name="Methods"> Gets or sets the collection of methods associated with this instance. </param>
     /// <param name="Fields"> Gets or sets the collection of field definitions associated with the structure. </param>
     /// <param name="Type"> Gets or sets the type associated with the current instance. </param>
+    /// <param name="Relationships"> Gets or sets the collection of relationships associated with the current object. </param>
     /// <param name="Summary"> Gets or sets the summary description for the current object. </param>
-    public record ClassStructure(int Id, string Name, List<MethodStructure> Methods, List<FieldStructure> Fields, string Type, string Summary);
+    public record ClassStructure(int Id, string Name, List<MethodStructure> Methods, List<FieldStructure> Fields, string Type, List<RelationShip>? Relationships, string Summary);
 
     /// <summary>
     /// Represents the metadata for a method, including its name, access modifier, return type, and parameters.

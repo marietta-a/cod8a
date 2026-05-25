@@ -33,26 +33,26 @@ class MethodStructure:
     summary: str
 
 @dataclass
+class Relationship:
+    id: int
+    type: str
+    associated_item: str
+
+@dataclass
 class ClassStructure:
     id: int
     name: str
     methods: List[MethodStructure]
     fields: List[FieldStructure]
     type: str
+    parent: List[Relationship]
     summary: str
-
-@dataclass
-class Relationship:
-    id: int
-    type: str
-    associated_item: str
 
 class FileStructure(BaseModel):
     id: int
     name: str
     using_directives: Optional[List[UsingDirective]] = []
     classes: Optional[List[ClassStructure]] = []
-    relationships: Optional[List[Relationship]] = []
 
 
 class ProjectStructure(BaseModel):

@@ -4,7 +4,8 @@ import os
 from typing import List, Union
 from models.models import (
     FileStructure, ClassStructure, MethodStructure, 
-    FieldStructure, ParameterStructure, ProjectStructure, UsingDirective
+    FieldStructure, ParameterStructure, ProjectStructure, UsingDirective,
+    Relationship
 )
 from dataclasses import asdict
 
@@ -46,7 +47,24 @@ class PythonParser:
     def _parse_class(self, node: ast.ClassDef) -> ClassStructure:
         methods = []
         fields = []
+        relationships = []
         summary = ast.get_docstring(node) or ""
+
+        for base in node.bases:
+            if isinstance(base, ast.Subscript):
+                base_name = ast.unparse(base.value)
+            else:
+                base_name = ast.unparse(base)
+            
+            # PEP 544 protocols, standard ABCs, or conventional I-prefixed interfaces
+            is_interface = base_name in ("Protocol", "typing.Protocol", "ABC") or (len(base_name) > 1 and base_name[0] == 'I' and base_name[1].isupper())
+            rel_type = "Interface" if is_interface else "Class"
+            
+            relationships.append(Relationship(
+                id=self._next_id(),
+                type=rel_type,
+                associated_item=base_name
+            ))
 
         for item in node.body:
             if isinstance(item, ast.FunctionDef):
@@ -58,7 +76,7 @@ class PythonParser:
                         fields.append(FieldStructure(
                             id=self._next_id(),
                             name=target.id,
-                            modifier="public", # Python doesn't have true access modifiers
+                            modifier="private" if target.id.startswith("_") else "public",
                             type="", # Type inference is complex, leaving empty for now
                             summary=""
                         ))
@@ -67,7 +85,7 @@ class PythonParser:
                     fields.append(FieldStructure(
                         id=self._next_id(),
                         name=item.target.id,
-                        modifier="public",
+                        modifier="private" if item.target.id.startswith("_") else "public",
                         type=ast.unparse(item.annotation),
                         summary=""
                     ))
@@ -78,6 +96,7 @@ class PythonParser:
             methods=methods,
             fields=fields,
             type="class",
+            parent=relationships,
             summary=summary
         )
 
@@ -97,7 +116,7 @@ class PythonParser:
         return MethodStructure(
             id=self._next_id(),
             name=node.name,
-            modifier="public",
+            modifier="private" if node.name.startswith("_") else "public",
             return_type=ast.unparse(node.returns) if node.returns else "",
             parameters=parameters,
             summary=summary

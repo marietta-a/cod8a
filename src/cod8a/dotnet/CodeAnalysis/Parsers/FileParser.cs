@@ -36,9 +36,6 @@ namespace CodeAnalyzer.Parsers
                 // Get the root node of the tree
                 CompilationUnitSyntax root = tree.GetCompilationUnitRoot();
 
-                
-                
-                
 
                 var directory = Directory.GetCurrentDirectory();
                 var fileName = Path.GetFileName(directory);
@@ -98,6 +95,29 @@ namespace CodeAnalyzer.Parsers
                     var methodStructures = new List<MethodStructure>();
                     var parameterStructures = new List<ParameterStructure>();
 
+                    var relationships = new List<RelationShip>();
+
+                    var baseTypes = classDeclaration.BaseList?.Types;
+                    int id = 0;
+
+                    if(baseTypes is not null)
+                    {
+                        
+                        relationships.AddRange(
+                            baseTypes.Value.Select(b => {
+                                string parent = b.Type switch
+                                {
+                                    SimpleNameSyntax simpleName => simpleName.Identifier.Text,
+                                    QualifiedNameSyntax qualifiedName => qualifiedName.Right.Identifier.Text,
+                                    _ => b.Type.ToString().Split('<')[0]
+                                };
+                                var type = parent.StartsWith("I") && parent.Length > 1 && char.IsUpper(parent[1]) ? "Interface" : "Class";
+                                return new RelationShip (++id, type, parent);
+                            })
+                        );
+                    }
+
+
                     fieldStructures.AddRange(classDeclaration.DescendantNodes().OfType<FieldDeclarationSyntax>().Select(f => new FieldStructure(default, f.Declaration.Variables.First().Identifier.Text, f.Modifiers.ToFullString().Trim(), f.Declaration.Type.ToString(), f.GetLeadingTrivia().ToString().Trim())));
                     fieldStructures.AddRange(classDeclaration.DescendantNodes().OfType<PropertyDeclarationSyntax>().Select(f => new FieldStructure(default, f.Identifier.Text, f.Modifiers.ToFullString().Trim(), f.Type.ToString(), f.GetLeadingTrivia().ToString().Trim())));
                     foreach (var method in classDeclaration.Members.OfType<MethodDeclarationSyntax>())
@@ -107,7 +127,7 @@ namespace CodeAnalyzer.Parsers
 
                         methodStructures.Add(new MethodStructure(default, method.Identifier.Text, method.Modifiers.ToFullString().Trim(), method.ReturnType.ToString(), parameters, method.GetLeadingTrivia().ToString().Trim()));
                     }
-                    classes.Add(new ClassStructure(default, classDeclaration.Identifier.Text, methodStructures, fieldStructures, classDeclaration.Keyword.ToFullString().Trim(), classDeclaration.GetLeadingTrivia().ToString().Trim()));
+                    classes.Add(new ClassStructure(default, classDeclaration.Identifier.Text, methodStructures, fieldStructures, classDeclaration.Keyword.ToFullString().Trim(), relationships, classDeclaration.GetLeadingTrivia().ToString().Trim()));
                 }
 
                 return classes;

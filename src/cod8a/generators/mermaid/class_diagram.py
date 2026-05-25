@@ -120,8 +120,21 @@ class ClassDiagramGenerator:
         rel_lines = []
         class_names = {c.name for c in classes}
         
+        label = ""
+        connector = ""
+
         for cls in classes:
+                
             cls_name = cls.name
+            #Check for inheritance
+            for relation in cls.parent:
+                if relation.type.lower() in "interface":
+                   label = "implements"
+                   connector = "<|--"
+                else:
+                   label = "inherits"
+                   connector = "<|.."
+                rel_lines.append(f"    {relation.associated_item} {connector} {cls_name}  : {label}")
             
             # 1. Composition/Association from Fields
             fields_to_show = self._get_fields_to_show(cls)
@@ -145,65 +158,10 @@ class ClassDiagramGenerator:
                             label = "uses"
                         # print(f"relationship: {cls_name} {connector} {base_type} : {label}")    
                         rel_lines.append(f"    {cls_name} {connector} {name} : {label}")
+                    
             
-            # 2. Inheritance (Heuristic for Parser types)
-            if "Parser" in cls_name and cls_name != "BaseParser":
-                # Check if it overrides Parse method which is abstract in BaseParser
-                has_override_parse = any(
-                    m.name == "Parse" and "override" in m.get("Modifier", "").lower()
-                    for m in cls.methods
-                )
-                if has_override_parse and "BaseParser" in class_names:
-                    rel_lines.append(f"    BaseParser <|-- {cls_name}")
 
         return sorted(list(set(rel_lines)))
-
-    # def _generate_relationships(self, classes: List[ClassStructure]) -> List[str]:
-    #     rel_lines = []
-    #     print("relationships")
-    #     class_names = {c.name for c in classes}
-        
-    #     for cls in classes:
-    #         cls_name = cls.name
-            
-    #         # 1. Composition/Association from Fields
-    #         fields_to_show = self._get_fields_to_show(cls)
-    #         for field in fields_to_show:
-    #             f_type = field.type
-    #             f_name = field.name
-                
-    #             # Extract base type from List<T> or T[]
-    #             match = re.search(r'<([^>]+)>', f_type)
-    #             base_type = match.group(1) if match else f_type
-    #             base_type = base_type.replace('[]', '').strip()
-    #             print(base_type)
-                
-    #             if base_type in class_names and base_type != cls_name:
-    #                 connector = "-->"
-                    
-    #                 # Heuristic for labels based on sample
-    #                 label = "contains"
-    #                 if base_type == "UsingDirective":
-    #                     label = "uses"
-    #                 elif base_type == "ParameterStructure":
-    #                     label = "has"
-    #                 elif "List" not in f_type and "[]" not in f_type:
-    #                     label = "uses"
-                        
-    #                 rel_lines.append(f"    {cls_name} {connector} {base_type} : {label}")
-            
-    #         # 2. Inheritance (Heuristic for Parser types)
-    #         if "Parser" in cls_name and cls_name != "BaseParser":
-    #             # Check if it overrides Parse method which is abstract in BaseParser
-    #             has_override_parse = any(
-    #                 m.name == "Parse" and "override" in m.get("Modifier", "").lower()
-    #                 for m in cls.methods
-    #             )
-    #             if has_override_parse and "BaseParser" in class_names:
-    #                 rel_lines.append(f"    BaseParser <|-- {cls_name}")
-
-    #     return sorted(list(set(rel_lines)))
-    
 
 def convert_json_to_mermaid(data: FileStructure | ProjectStructure) -> str:
     print("calling uml class generator ...")
