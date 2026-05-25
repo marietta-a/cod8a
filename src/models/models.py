@@ -36,7 +36,7 @@ class MethodStructure:
 class Relationship:
     id: int
     type: str
-    associated_item: str
+    parent_name: str
 
 @dataclass
 class ClassStructure:
@@ -45,7 +45,7 @@ class ClassStructure:
     methods: List[MethodStructure]
     fields: List[FieldStructure]
     type: str
-    parent: List[Relationship]
+    associated_item: List[Relationship]
     summary: str
 
 class FileStructure(BaseModel):

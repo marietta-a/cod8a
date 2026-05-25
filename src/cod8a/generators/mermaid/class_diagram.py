@@ -40,17 +40,16 @@ class ClassDiagramGenerator:
 
     def _extract_classes(self, data: Union[FileStructure | ProjectStructure], classes: list[ClassStructure]) -> List[ClassStructure]:
         seen_classes = set()
-        if type(data) is FileStructure:
+        if isinstance(data, FileStructure):
             for cls in data.classes:
-                for cls in data.classes:
-                    cls_name = cls.name
-                    if cls_name and cls_name not in seen_classes:
-                        classes.append(cls)
-                        seen_classes.add(cls_name)
-        elif type(data) is list:
+                cls_name = cls.name
+                if cls_name and cls_name not in seen_classes:
+                    classes.append(cls)
+                    seen_classes.add(cls_name)
+        elif isinstance(data, list):
             for file in data:
                 self._extract_classes(file, classes)
-        elif type(data) is ProjectStructure:
+        elif isinstance(data, ProjectStructure):
             for file in data.files:
               self._extract_classes(file, classes)
         else:
@@ -62,7 +61,6 @@ class ClassDiagramGenerator:
     def _generate_class_block(self, cls: ClassStructure) -> List[str]:
         lines = [f"    class {cls.name} {{"]
         
-        # fields_to_show = self._get_fields_to_show(cls)
         # Fields
         for field in cls.fields:
             f_name = field.name
@@ -75,14 +73,17 @@ class ClassDiagramGenerator:
         # Methods
         for method in cls.methods:
             m_name = method.name
-            m_type = method.return_type if method.return_type else "void"
+            m_type = method.return_type
             m_mod = method.modifier.lower()
             
             visibility = self._get_visibility(m_mod)
             params_list = method.parameters
-            param_str = ", ".join([f"{p.type} {p.name}" for p in params_list])
+            param_str = ", ".join([f"{p.type} {p.name}" if p.type else p.name for p in params_list])
             
-            lines.append(f"        {visibility}{m_type} {m_name}({param_str})")
+            method_line = f"        {visibility}{m_name}({param_str})"
+            if m_type:
+                method_line += f" {m_type}"
+            lines.append(method_line)
             
         lines.append("    }")
         lines.append("")
@@ -120,47 +121,36 @@ class ClassDiagramGenerator:
         rel_lines = []
         class_names = {c.name for c in classes}
         
-        label = ""
-        connector = ""
-
         for cls in classes:
-                
             cls_name = cls.name
-            #Check for inheritance
-            for relation in cls.parent:
-                if relation.type.lower() in "interface":
+            # Check for inheritance/implementation
+            for relation in cls.associated_item:
+                connector = "<|--" # Default to inheritance
+                label = "inherits"
+                if "interface" in relation.type.lower() or "implements" in relation.type.lower():
                    label = "implements"
-                   connector = "<|--"
-                else:
-                   label = "inherits"
-                   connector = "<|.."
-                rel_lines.append(f"    {relation.associated_item} {connector} {cls_name}  : {label}")
-            
-            # 1. Composition/Association from Fields
-            fields_to_show = self._get_fields_to_show(cls)
-            for field in cls.fields:
                 
+                rel_lines.append(f"    {relation.parent_name} {connector} {cls_name} : {label}")
+            
+            # Composition/Association from Fields
+            for field in cls.fields:
                 # Extract base type from List<T> or T[]
                 match = re.search(r'<([^>]+)>', field.type)
                 base_type = match.group(1) if match else field.type
                 base_type = base_type.replace('[]', '').strip()
+                
                 for name in class_names:
-                    if name in base_type and cls_name not in base_type:
+                    if name in base_type and cls_name != name:
                         connector = "-->"
+                        label = "uses"
                         
-                        # Heuristic for labels based on sample
-                        label = "contains"
-                        if base_type == "UsingDirective":
-                            label = "uses"
-                        elif base_type == "ParameterStructure":
-                            label = "has"
-                        elif "List" not in field.type and "[]" not in field.type:
-                            label = "uses"
-                        # print(f"relationship: {cls_name} {connector} {base_type} : {label}")    
+                        # Use composition for collections if it looks like it contains the class
+                        if "List" in field.type or "[]" in field.type:
+                            connector = "*--"
+                            label = "contains"
+                        
                         rel_lines.append(f"    {cls_name} {connector} {name} : {label}")
                     
-            
-
         return sorted(list(set(rel_lines)))
 
 def convert_json_to_mermaid_class(data: FileStructure | ProjectStructure) -> str:

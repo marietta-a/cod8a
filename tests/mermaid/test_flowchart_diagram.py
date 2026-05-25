@@ -11,18 +11,17 @@ def test_flowchart_generator_file(generator):
         id=1,
         name="Models",
         classes=[
-            ClassStructure(id=1, name="User", type="class", summary="", parent=[], fields=[], methods=[]),
-            ClassStructure(id=2, name="Account", type="class", summary="", parent=[], fields=[], methods=[])
+            ClassStructure(id=1, name="User", type="class", summary="", associated_item=[], fields=[], methods=[]),
+            ClassStructure(id=2, name="Account", type="class", summary="", associated_item=[], fields=[], methods=[])
         ]
     )
 
     output = generator.generate(test_data)
     
     assert "graph TD" in output
-    assert "subgraph Models" in output
-    assert "User[User]" in output
-    assert "Account[Account]" in output
-    assert "end" in output
+    assert 'file_1["Models"]' in output
+    assert 'cls_1["User"]' in output
+    assert 'cls_2["Account"]' in output
 
 def test_flowchart_generator_project(generator):
     test_data = ProjectStructure(
@@ -31,7 +30,7 @@ def test_flowchart_generator_project(generator):
             FileStructure(
                 id=1,
                 name="Domain.Models",
-                classes=[ClassStructure(id=1, name="Entity", type="class", summary="", parent=[], fields=[], methods=[])]
+                classes=[ClassStructure(id=1, name="Entity", type="class", summary="", associated_item=[], fields=[], methods=[])]
             )
         ]
     )
@@ -39,6 +38,6 @@ def test_flowchart_generator_project(generator):
     output = generator.generate(test_data)
     
     assert "graph TD" in output
-    assert "subgraph Domain_Models" in output
-    assert "Entity[Entity]" in output
-    assert "end" in output
+    assert 'Project["TestProject"]' in output
+    assert 'file_1["Domain.Models"]' in output
+    assert 'cls_1["Entity"]' in output

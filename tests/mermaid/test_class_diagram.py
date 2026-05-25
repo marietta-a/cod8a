@@ -21,8 +21,8 @@ def test_generate_class_diagram_basic(generator):
                 name="User",
                 type="class",
                 summary="A user class",
-                parent=[
-                    Relationship(id=1, type="Class", associated_item="BaseEntity")
+                associated_item=[
+                    Relationship(id=1, type="Class", parent_name="BaseEntity")
                 ],
                 fields=[
                     FieldStructure(id=1, name="username", modifier="private", type="str", summary=""),
@@ -46,7 +46,7 @@ def test_generate_class_diagram_basic(generator):
                 name="Role",
                 type="class",
                 summary="Role class",
-                parent=[],
+                associated_item=[],
                 fields=[],
                 methods=[]
             )
@@ -61,8 +61,8 @@ def test_generate_class_diagram_basic(generator):
     assert "class User {" in mermaid_output
     assert "-str username" in mermaid_output
     assert "+Role role" in mermaid_output
-    assert "+bool login(str password)" in mermaid_output
+    assert "+login(str password) bool" in mermaid_output
     
     # Check relationships
-    assert "BaseEntity <|.. User  : inherits" in mermaid_output or "User <|.. BaseEntity" in mermaid_output or "BaseEntity <|.. User" in mermaid_output
-    assert "User --> Role : uses" in mermaid_output or "User --> Role : contains" in mermaid_output
+    assert "BaseEntity <|-- User : inherits" in mermaid_output
+    assert "User --> Role : uses" in mermaid_output

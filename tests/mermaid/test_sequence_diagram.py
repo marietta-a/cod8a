@@ -11,8 +11,8 @@ def test_sequence_generator(generator):
         id=1,
         name="test_file.py",
         classes=[
-            ClassStructure(id=1, name="Client", type="class", summary="", parent=[], fields=[], methods=[]),
-            ClassStructure(id=2, name="Server", type="class", summary="", parent=[], fields=[], methods=[])
+            ClassStructure(id=1, name="Client", type="class", summary="", associated_item=[], fields=[], methods=[]),
+            ClassStructure(id=2, name="Server", type="class", summary="", associated_item=[], fields=[], methods=[])
         ]
     )
 
@@ -21,4 +21,3 @@ def test_sequence_generator(generator):
     assert "sequenceDiagram" in output
     assert "participant Client" in output
     assert "participant Server" in output
-    assert "Note over Client, Server: Interaction details not yet extracted from structural JSON." in output

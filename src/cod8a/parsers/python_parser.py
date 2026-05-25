@@ -63,7 +63,7 @@ class PythonParser:
             relationships.append(Relationship(
                 id=self._next_id(),
                 type=rel_type,
-                associated_item=base_name
+                parent_name=base_name
             ))
 
         for item in node.body:
@@ -96,7 +96,7 @@ class PythonParser:
             methods=methods,
             fields=fields,
             type="class",
-            parent=relationships,
+            associated_item=relationships,
             summary=summary
         )
 

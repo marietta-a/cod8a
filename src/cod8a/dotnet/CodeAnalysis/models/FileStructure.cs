@@ -33,7 +33,7 @@ namespace CodeAnalyzer.Models
     /// </summary>
     /// <param name="Id">Id of the instance</param>
     /// <param name="Type">Type of relationship</param>
-    /// <param name="AssociatedItem">Item associated with</param>
+    /// <param name="Parent">Base item</param>
     public record RelationShip(int Id, string Type, string AssociatedItem);
 
     public record UsingDirective(int Id, string Name);

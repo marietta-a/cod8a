@@ -56,7 +56,7 @@ class DotnetParser:
             methods=[self._map_method(m) for m in data.get("Methods", []) or []],
             fields=[self._map_field(f) for f in data.get("Fields", []) or []],
             type=data.get("Type", "class"),
-            parent=[self._map_relationship(r) for r in data.get("Relationships", []) or []],
+            associated_item=[self._map_relationship(r) for r in data.get("Relationships", []) or []],
             summary=data.get("Summary", "")
         )
 
@@ -83,5 +83,5 @@ class DotnetParser:
         return Relationship(
             id=data.get("Id", 0),
             type=data.get("Type", ""),
-            associated_item=data.get("AssociatedItem", "")
+            parent_name=data.get("AssociatedItem", "")
         )

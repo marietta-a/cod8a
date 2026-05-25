@@ -1,10 +1,11 @@
+import re
 from typing import List, Union
 
 from models.models import ClassStructure, FileStructure, ProjectStructure
 
 class FlowchartDiagramGenerator:
     """
-    Generates a Mermaid flowchart diagram from a JSON representation of code structure.
+    Generates a Mermaid flowchart diagram from a representation of code structure.
     """
 
     def generate(self, data: Union[FileStructure, ProjectStructure, List[FileStructure]]) -> str:
@@ -13,32 +14,48 @@ class FlowchartDiagramGenerator:
 
         mermaid_lines = ["graph TD"]
         
-        if isinstance(data, list):
-            for file in data:
-                mermaid_lines.extend(self._generate_file_subgraph(file))
-        elif isinstance(data, ProjectStructure):
+        if isinstance(data, ProjectStructure):
+            mermaid_lines.append(f'    Project["{data.name}"]')
             for file in data.files:
-                mermaid_lines.extend(self._generate_file_subgraph(file))
+                file_id = f"file_{file.id}"
+                mermaid_lines.append(f'    Project --> {file_id}["{file.name}"]')
+                mermaid_lines.extend(self._generate_file_content(file, file_id))
         elif isinstance(data, FileStructure):
-            mermaid_lines.extend(self._generate_file_subgraph(data))
-        
+            file_id = f"file_{data.id}"
+            mermaid_lines.append(f'    {file_id}["{data.name}"]')
+            mermaid_lines.extend(self._generate_file_content(data, file_id))
+        elif isinstance(data, list):
+            for item in data:
+                if isinstance(item, FileStructure):
+                    file_id = f"file_{item.id}"
+                    mermaid_lines.append(f'    {file_id}["{item.name}"]')
+                    mermaid_lines.extend(self._generate_file_content(item, file_id))
+            
         return "\n".join(mermaid_lines)
 
-    def _generate_file_subgraph(self, file_data: FileStructure) -> List[str]:
+    def _generate_file_content(self, file_data: FileStructure, file_id: str) -> List[str]:
         lines = []
         
         if not file_data.classes:
             return lines
 
-        # Clean file name for subgraph ID
-        safe_name = "".join(c if c.isalnum() else "_" for c in file_data.name)
-        lines.append(f"    subgraph {safe_name}")
-        
         for cls in file_data.classes:
-            lines.append(f"        {cls.name}[{cls.name}]")
+            cls_id = f"cls_{cls.id}"
+            lines.append(f'    {file_id} --> {cls_id}["{cls.name}"]')
             
-        lines.append("    end")
+            # Optionally add methods and fields as sub-nodes
+            if cls.methods or cls.fields:
+                lines.append(f'    subgraph {cls.name}_Components')
+                for field in cls.fields:
+                    f_id = f"field_{field.id}"
+                    lines.append(f'        {cls_id} --> {f_id}["{field.name}"]')
+                for method in cls.methods:
+                    m_id = f"method_{method.id}"
+                    lines.append(f'        {cls_id} --> {m_id}["{method.name}()"]')
+                lines.append('    end')
+
         return lines
+
 
 def convert_json_to_mermaid_flowchart(data: Union[FileStructure, ProjectStructure]) -> str:
     print("calling uml flowchart generator ...")
