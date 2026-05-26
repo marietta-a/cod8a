@@ -34,14 +34,14 @@ class SequenceDiagramGenerator:
             
 
             if is_model:
-                # Do not expose private properties
+                # Exclude private properties
                 fields = [f for f in cls.fields if f.modifier != "private"]
                 mermaid_lines.append(f"    C->>{cls_alias}: Create {cls.name}")
                 for field in fields[:5]: # Limit to 5 fields to avoid huge diagrams
                     if not field.name.startswith('_'):
                         mermaid_lines.append(f"    {cls_alias}->>{cls_alias}: Set {self._sanitize(field.name)}")
             else:
-                # Do not expose private methods
+                # Exclude private methods
                 methods = [m for m in cls.methods if m.modifier != "private"]
                 for method in methods:
                     if method.name.lower() in["dispose", "tostring", "equals", "gethashcode", "gettype"]:
@@ -70,5 +70,11 @@ class SequenceDiagramGenerator:
         if not type_str: return ""
         return re.split(r'[<\[]', type_str)[0].replace('?', '').split('.')[-1].strip()
 
-def convert_json_to_mermaid_sequence(data) -> str:
+def generate_sequence_diagram(data) -> str:
     return SequenceDiagramGenerator().generate(data)
+
+if __name__ == "__main__":
+    import sys
+    if len(sys.argv) > 1:
+        with open(sys.argv[1], 'r') as f:
+            print(generate_sequence_diagram(f.read()))

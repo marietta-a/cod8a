@@ -2,9 +2,9 @@ import click
 import os
 from dataclasses import asdict
 
-from cod8a.generators.mermaid.class_diagram import convert_json_to_mermaid_class
-from cod8a.generators.mermaid.flowchart_diagram import convert_json_to_mermaid_flowchart
-from cod8a.generators.mermaid.sequence_diagram import convert_json_to_mermaid_sequence
+from cod8a.generators.mermaid.class_diagram import generate_class_diagram
+from cod8a.generators.mermaid.flowchart_diagram import generate_flowchart_diagram
+from cod8a.generators.mermaid.sequence_diagram import generate_sequence_diagram
 from cod8a.helpers.cli_helper import extract_structure, save_diagram
 from enums.diagram_type import DiagramType
 
@@ -25,7 +25,8 @@ def cli():
 def uml(path, diagram_type, output_json, output):
     """Generate UML diagram (Mermaid format)."""
     struct = extract_structure(path)
-    
+    base_name = os.path.basename(path or os.getcwd())
+    # print(struct)
 
     if not struct:
         click.echo("Error: Could not extract structure.")
@@ -33,13 +34,13 @@ def uml(path, diagram_type, output_json, output):
 
     canon_type = "class"
     if DiagramType.FLOWCHART.value.startswith(diagram_type):
-        diagram = convert_json_to_mermaid_flowchart(struct)
+        diagram = generate_flowchart_diagram(struct, base_name)
         canon_type = "flowchart"
     elif DiagramType.SEQUENCE.value.startswith(diagram_type):
-        diagram = convert_json_to_mermaid_sequence(struct)
+        diagram = generate_sequence_diagram(struct)
         canon_type = "sequence"
     else:
-        diagram = convert_json_to_mermaid_class(struct)
+        diagram = generate_class_diagram(struct)
         canon_type = "class"
         
     print(diagram)
