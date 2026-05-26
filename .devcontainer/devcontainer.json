@@ -1,0 +1,37 @@
+{
+    "name": "cod8a Dev Container",
+    "build": {
+        "dockerfile": "Dockerfile"
+    },
+    "features": {
+        "ghcr.io/devcontainers/features/common-utils:1": {
+            "configureZshAsDefaultShell": true
+        }
+    },
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "ms-python.python",
+                "ms-python.vscode-pylint",
+                "ms-dotnettools.csharp",
+                "tamasfe.even-better-toml",
+                "be5invis.vscode-mermaid-editor",
+                "charliermarsh.ruff"
+            ],
+            "settings": {
+                "python.defaultInterpreterPath": ".venv/bin/python",
+                "python.terminal.activateEnvInSelectedTerminal": true,
+                "python.testing.pytestArgs": [
+                    "tests"
+                ],
+                "python.testing.unittestEnabled": false,
+                "python.testing.pytestEnabled": true
+            }
+        }
+    },
+    "remoteUser": "vscode",
+    "postCreateCommand": "poetry install && dotnet build src/cod8a/dotnet/CodeAnalysis/CodeAnalyzer.csproj",
+    "mounts": [
+        "source=${localWorkspaceFolderBasename}-venv,target=${containerWorkspaceFolder}/.venv,type=volume"
+    ]
+}

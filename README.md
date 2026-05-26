@@ -20,6 +20,9 @@ git clone https://github.com/yourusername/cod8a.git
 cd cod8a
 ```
 
+### Development Options
+
+#### 1. Local Setup
 3. **Install** Python dependencies:
 
 ```bash
@@ -30,6 +33,21 @@ poetry install
 
 ```bash
 dotnet --version
+```
+
+#### 2. VS Code Dev Container (Recommended)
+If you use VS Code, you can skip the local setup by using the provided **Dev Container**. It comes pre-configured with Python 3.13, .NET 10.0, and Poetry.
+- Simply open the project in VS Code and click **"Reopen in Container"** when prompted.
+
+#### 3. Docker
+You can also run `cod8a` as a standalone container without installing any dependencies locally:
+
+```bash
+# Build the image
+docker build -t cod8a .
+
+# Run the tool
+docker run -v $(pwd):/app/data cod8a uml -p /app/data/src
 ```
 
 ## Usage
