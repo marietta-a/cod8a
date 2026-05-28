@@ -1,6 +1,6 @@
 import pytest
 from cod8a.generators.mermaid.class_diagram import ClassDiagramGenerator
-from models.models import (
+from cod8a.models.models import (
     FileStructure, ClassStructure, FieldStructure, 
     MethodStructure, ParameterStructure, Relationship
 )

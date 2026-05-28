@@ -6,21 +6,43 @@ from cod8a.generators.mermaid.class_diagram import generate_class_diagram
 from cod8a.generators.mermaid.flowchart_diagram import generate_flowchart_diagram
 from cod8a.generators.mermaid.sequence_diagram import generate_sequence_diagram
 from cod8a.helpers.cli_helper import extract_structure, save_diagram
-from enums.diagram_type import DiagramType
+from cod8a.enums.diagram_type import DiagramType
 
 
-@click.group()
+class ExpandedHelpGroup(click.Group):
+    def format_help(self, ctx, formatter):
+        # 1. Main help (Group docstring)
+        self.format_usage(ctx, formatter)
+        self.format_help_text(ctx, formatter)
+        self.format_options(ctx, formatter)
+        
+        # 2. Subcommands and their options
+        for command_name in self.list_commands(ctx):
+            command = self.get_command(ctx, command_name)
+            if command and not command.hidden:
+                formatter.write_paragraph()
+                with formatter.section(f"Command: {command_name}"):
+                    # Usage and help text
+                    formatter.write_text(command.help or "")
+                    command.format_options(ctx, formatter)
+
+@click.group(cls=ExpandedHelpGroup)
 def cli():
-    """cod8a - Code analysis and visualization tool."""
+    """cod8a (pronounced codetta) is a tool for analyzing and visualizing code structure.
+    
+    It supports both Python and C# projects, generating Mermaid-compatible diagrams.
+    """
     pass
 
 # Generation of UML Diagrams
-@cli.command()
-@click.option('-p', '--path', help='Specific path of file(s) to analyze')
+@cli.command(help="Generate a Mermaid diagram from the source code structure.")
+@click.option('-p', '--path', required=True, 
+              help='The path to the file or directory to analyze.')
 @click.option('-d', '--diagram', 'diagram_type', default='class', 
               type=click.Choice(["seq", "s", "sequence", "flow", "f", "flowchart", "c", "class"]), 
-              help='Type of diagram to generate')
-@click.option('-o', '--output', help='Output file path (saves as .mmd)')
+              help='The type of diagram to generate (default: class).')
+@click.option('-o', '--output', 
+              help='Optional output file path. If not provided, you will be prompted to save to the Downloads folder.')
 def uml(path, diagram_type, output):
     """Generate UML diagram (Mermaid format)."""
     struct = extract_structure(path)
@@ -49,7 +71,7 @@ def uml(path, diagram_type, output):
 
 
 # TODO Generating code documentation 
-@click.command(hidden=True)
+@click.command(help="[TODO] Generate documentation (Markdown format) from code structure.")
 @click.option('-p', '--path', help='Specific path of file(s) to analyze')
 @click.option('--json', 'output_json', is_flag=True, help='Output in JSON format')
 def doc_cli(path, output_json):

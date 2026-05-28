@@ -1,7 +1,7 @@
 import re
 from typing import List, Union
 
-from models.models import FileStructure, ProjectStructure
+from cod8a.models.models import FileStructure, ProjectStructure
 
 class FlowchartDiagramGenerator:
     """

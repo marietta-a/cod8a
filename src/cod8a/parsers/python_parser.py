@@ -2,7 +2,7 @@ import ast
 import json
 import os
 from typing import List, Union
-from models.models import (
+from cod8a.models.models import (
     FileStructure, ClassStructure, MethodStructure, 
     FieldStructure, ParameterStructure, ProjectStructure, UsingDirective,
     Relationship

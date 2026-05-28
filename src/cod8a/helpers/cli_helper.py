@@ -6,7 +6,7 @@ import click
 
 from cod8a.parsers.dotnet_parser import DotnetParser
 from cod8a.parsers.python_parser import PythonParser
-from models.models import FileStructure, ProjectStructure
+from cod8a.models.models import FileStructure, ProjectStructure
 
 # Path to the C# analyzer project
 DOTNET_ANALYZER_PATH = os.path.join(os.path.dirname(__file__), "..", "dotnet", "CodeAnalysis", "CodeAnalyzer.csproj")

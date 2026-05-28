@@ -3,7 +3,7 @@ import json
 import os
 import shutil
 from typing import Union, List
-from models.models import (
+from cod8a.models.models import (
     FileStructure, ProjectStructure, ClassStructure, 
     MethodStructure, FieldStructure, ParameterStructure, 
     UsingDirective, Relationship

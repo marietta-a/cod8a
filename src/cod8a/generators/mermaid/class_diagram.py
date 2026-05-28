@@ -2,7 +2,7 @@ import json
 import re
 from typing import List, Dict, Any, Union
 
-from models.models import ClassStructure, FieldStructure, FileStructure, ProjectStructure
+from cod8a.models.models import ClassStructure, FieldStructure, FileStructure, ProjectStructure
 
 class ClassDiagramGenerator:
     """

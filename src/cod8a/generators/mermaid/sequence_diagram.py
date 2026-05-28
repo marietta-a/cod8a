@@ -1,7 +1,7 @@
 import re
 from typing import List, Union
 
-from models.models import ClassStructure, FileStructure, ProjectStructure
+from cod8a.models.models import ClassStructure, FileStructure, ProjectStructure
 
 class SequenceDiagramGenerator:
     """ Generates a generic Mermaid sequence diagram based on class structure. """

@@ -1,6 +1,6 @@
 import pytest
 from cod8a.generators.mermaid.flowchart_diagram import FlowchartDiagramGenerator
-from models.models import FileStructure, ClassStructure, ProjectStructure
+from cod8a.models.models import FileStructure, ClassStructure, ProjectStructure
 
 @pytest.fixture
 def generator():

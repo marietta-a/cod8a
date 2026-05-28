@@ -1,6 +1,6 @@
 import pytest
 from cod8a.generators.mermaid.sequence_diagram import SequenceDiagramGenerator
-from models.models import FileStructure, ClassStructure
+from cod8a.models.models import FileStructure, ClassStructure
 
 @pytest.fixture
 def generator():
