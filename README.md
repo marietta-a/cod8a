@@ -6,9 +6,20 @@ cod8a pronounced codetta, is a code documentation and visualization tool for **P
 
 ### Prerequisites
 
-- **[Python 3.9+](https://www.python.org/downloads/)** (Required for all projects)
-- **[Poetry](https://python-poetry.org/docs/#installation)** (Required for all projects)
-- **[.NET 10.0 SDK](https://dotnet.microsoft.com/download/dotnet/10.0)** (Required **only** if you intend to analyze C#/.NET projects)
+- **[Python 3.9+](https://www.python.org/downloads/)**
+- **[.NET 10.0 Runtime or SDK](https://dotnet.microsoft.com/download/dotnet/10.0)** (Required **only** for C#/.NET analysis)
+
+### From PyPI (Recommended for Users)
+
+Once published, you can install `cod8a` directly using pip:
+
+```bash
+pip install cod8a
+```
+
+## Development & Contribution
+
+If you want to contribute to the project or run it from source:
 
 ### Setup
 
@@ -23,7 +34,7 @@ cd cod8a
 ### Development Options
 
 #### 1. Local Setup
-3. **Install** Python dependencies:
+3. **Install** Python dependencies using **[Poetry](https://python-poetry.org/docs/#installation)**:
 
 ```bash
 poetry install

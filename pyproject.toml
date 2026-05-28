@@ -1,7 +1,7 @@
 [project]
 name = "cod8a"
 version = "0.1.0"
-description = "Marietta's own code documentation and visualization tool"
+description = "cod8a is a code documentation and visualization tool for Python and .NET projects"
 authors = [
     { name = "Akumbom",email = "akumbom5ma@gmail.com"}
 ]
@@ -29,7 +29,7 @@ cod8a = "cod8a.cli:main"
 cde8a = "cod8a.cli:doc_main"
 
 [build-system]
-requires = ["poetry-core>=2.0.0,<3.0.0"]
+requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [dependency-groups]
