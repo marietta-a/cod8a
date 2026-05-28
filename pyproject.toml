@@ -9,6 +9,7 @@ maintainers = [
     { name = "Marietta Akumbom" }
  ]
 keywords = [ "visualization", "uml", "docs", "flowchart", "class", "sequence", "diagram" ]
+license = "MIT"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
