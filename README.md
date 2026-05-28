@@ -82,7 +82,6 @@ cod8a uml -p src/my_logic -d flow
 - `-p, --path`: Path to the file or directory to analyze.
 - `-d, --diagram`: Type of diagram to generate (default: `class`).
 - `-o, --output`: Output file path (saves as `.mmd`).
-- `--json`: Output the raw analysis in JSON format.
 
 ### Documentation (In development)
 
