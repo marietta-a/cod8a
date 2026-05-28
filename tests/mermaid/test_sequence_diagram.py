@@ -19,5 +19,6 @@ def test_sequence_generator(generator):
     output = generator.generate(test_data)
     
     assert "sequenceDiagram" in output
-    assert "participant Client" in output
-    assert "participant Server" in output
+    assert 'participant C as User' in output
+    assert 'participant P0 as "Client"' in output
+    assert 'participant P1 as "Server"' in output

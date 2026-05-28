@@ -16,12 +16,12 @@ def test_flowchart_generator_file(generator):
         ]
     )
 
-    output = generator.generate(test_data)
+    output = generator.generate(test_data, "Models")
     
     assert "graph TD" in output
-    assert 'file_1["Models"]' in output
-    assert 'cls_1["User"]' in output
-    assert 'cls_2["Account"]' in output
+    assert 'File: Models' in output
+    assert 'Class: User' in output
+    assert 'Class: Account' in output
 
 def test_flowchart_generator_project(generator):
     test_data = ProjectStructure(
@@ -35,9 +35,8 @@ def test_flowchart_generator_project(generator):
         ]
     )
 
-    output = generator.generate(test_data)
+    output = generator.generate(test_data, "TestProject")
     
     assert "graph TD" in output
-    assert 'Project["TestProject"]' in output
-    assert 'file_1["Domain.Models"]' in output
-    assert 'cls_1["Entity"]' in output
+    assert 'File: Domain.Models' in output
+    assert 'Class: Entity' in output

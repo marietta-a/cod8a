@@ -1,6 +1,7 @@
 import subprocess
 import json
 import os
+import shutil
 from typing import Union, List
 from models.models import (
     FileStructure, ProjectStructure, ClassStructure, 
@@ -13,9 +14,21 @@ class DotnetParser:
         self.analyzer_path = analyzer_path
 
     def parse(self, path: str) -> Union[FileStructure, ProjectStructure]:
+        if not shutil.which("dotnet"):
+            raise Exception("The .NET SDK/Runtime is required to analyze C# files. Please install it or ensure it is in your PATH.")
+
         abs_path = os.path.abspath(path)
-        args = ["dotnet", "run", "--project", self.analyzer_path, "--", abs_path]
         cwd = os.path.dirname(self.analyzer_path)
+        
+        # Look for a compiled DLL first (production/distribution mode)
+        # Expected path: src/cod8a/dotnet/CodeAnalysis/bin/Release/net10.0/CodeAnalyzer.dll
+        dll_path = os.path.join(cwd, "bin", "Release", "net10.0", "CodeAnalyzer.dll")
+        
+        if os.path.exists(dll_path):
+            args = ["dotnet", dll_path, abs_path]
+        else:
+            # Fallback to source-level execution (development mode)
+            args = ["dotnet", "run", "--project", self.analyzer_path, "--", abs_path]
 
         result = subprocess.run(args, capture_output=True, text=True, cwd=cwd)
         if result.returncode != 0:

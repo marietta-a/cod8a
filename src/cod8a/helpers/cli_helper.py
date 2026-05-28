@@ -64,9 +64,8 @@ def save_diagram(struct, canon_type, content, output=None, path=None):
         else:
             # If no output provided, prompt the user
             if click.confirm("\nDo you want to save the diagram to a file?", default=True):
-                # Save in docs/mermaid at project root
-                project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
-                save_dir = os.path.join(project_root, "docs", "mermaid")
+                # Save in the user's Downloads directory
+                save_dir = os.path.join(os.path.expanduser("~"), "Downloads")
                 file_path = os.path.join(save_dir, f"{pascal_name}.mmd")
         
         if file_path:

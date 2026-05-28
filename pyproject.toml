@@ -8,7 +8,7 @@ authors = [
 maintainers = [ 
     { name = "Marietta Akumbom" }
  ]
-keywords = [ "visualization", "uml", "docs", "flowchart", "class", "sequence, "diagram" ]
+keywords = [ "visualization", "uml", "docs", "flowchart", "class", "sequence", "diagram" ]
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
@@ -18,6 +18,10 @@ dependencies = [
 
 [tool.poetry]
 packages = [{include = "cod8a", from = "src"}]
+include = [
+    { path = "src/cod8a/dotnet/CodeAnalysis/bin/Release/net10.0/*.dll", format = ["wheel"] },
+    { path = "src/cod8a/dotnet/CodeAnalysis/bin/Release/net10.0/*.json", format = ["wheel"] }
+]
 
 [tool.poetry.scripts]
 cod8a = "cod8a.cli:main"

@@ -20,9 +20,8 @@ def cli():
 @click.option('-d', '--diagram', 'diagram_type', default='class', 
               type=click.Choice(["seq", "s", "sequence", "flow", "f", "flowchart", "c", "class"]), 
               help='Type of diagram to generate')
-@click.option('--json', 'output_json', is_flag=True, help='Output in JSON format')
 @click.option('-o', '--output', help='Output file path (saves as .mmd)')
-def uml(path, diagram_type, output_json, output):
+def uml(path, diagram_type, output):
     """Generate UML diagram (Mermaid format)."""
     struct = extract_structure(path)
     base_name = os.path.basename(path or os.getcwd())
@@ -50,7 +49,7 @@ def uml(path, diagram_type, output_json, output):
 
 
 # TODO Generating code documentation 
-@click.command()
+@click.command(hidden=True)
 @click.option('-p', '--path', help='Specific path of file(s) to analyze')
 @click.option('--json', 'output_json', is_flag=True, help='Output in JSON format')
 def doc_cli(path, output_json):
