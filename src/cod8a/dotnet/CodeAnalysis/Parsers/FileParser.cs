@@ -38,7 +38,7 @@ namespace CodeAnalyzer.Parsers
 
 
                 var directory = Directory.GetCurrentDirectory();
-                var fileName = Path.GetFileName(directory);
+                var fileName = Name ?? Path.GetFileName(directory);
                 var id = 0;
                 var usings = root.Usings.Select(b =>
                 {

@@ -3,6 +3,7 @@ import json
 import os
 import shutil
 from typing import Union, List
+from pathlib import Path
 from cod8a.models.models import (
     FileStructure, ProjectStructure, ClassStructure, 
     MethodStructure, FieldStructure, ParameterStructure, 
@@ -12,6 +13,7 @@ from cod8a.models.models import (
 class DotnetParser:
     def __init__(self, analyzer_path: str):
         self.analyzer_path = analyzer_path
+        self.file_name = ""
 
     def parse(self, path: str) -> Union[FileStructure, ProjectStructure]:
         if not shutil.which("dotnet"):
@@ -19,6 +21,7 @@ class DotnetParser:
 
         abs_path = os.path.abspath(path)
         cwd = os.path.dirname(self.analyzer_path)
+        self.file_name = Path(abs_path).stem
         
         # Look for a compiled DLL first (production/distribution mode)
         # Expected path: src/cod8a/dotnet/CodeAnalysis/bin/Release/net10.0/CodeAnalyzer.dll
@@ -50,7 +53,7 @@ class DotnetParser:
 
     def _map_project(self, data: dict) -> ProjectStructure:
         return ProjectStructure(
-            name=data.get("Name", ""),
+            name=self.file_name,
             files=[self._map_file(f) for f in data.get("Files", [])]
         )
 
