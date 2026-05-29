@@ -37,7 +37,7 @@ namespace CodeAnalyzer.Parsers
                 CompilationUnitSyntax root = tree.GetCompilationUnitRoot();
 
 
-                var fileName = Path.GetFileName(FilePath);
+                var fileName = Name ?? Path.GetFileName(FilePath);
                 var id = 0;
                 var usings = root.Usings.Select(b =>
                 {

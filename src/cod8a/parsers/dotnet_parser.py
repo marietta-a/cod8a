@@ -45,7 +45,6 @@ class DotnetParser:
         # The C# analyzer might still print some messages to stdout. 
         # We find the last line which should be our JSON.
         lines = result.stdout.strip().splitlines()
-        print(lines)
         json_str = next((line for line in reversed(lines) if line.startswith('{') and line.endswith('}')), None)
         
         if not json_str:

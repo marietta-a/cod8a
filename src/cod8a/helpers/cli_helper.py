@@ -12,7 +12,7 @@ from cod8a.models.models import FileStructure, ProjectStructure
 DOTNET_ANALYZER_PATH = os.path.join(os.path.dirname(__file__), "..", "dotnet", "CodeAnalyzer", "CodeAnalyzer.csproj")
 
 def _get_parser(path: str):
-    print(f"Checking analyzer ...")
+    print(f"Analyzing File ...")
     isDotnetParser = any(path.endswith(ext) for ext in [".cs", ".csproj", ".sln"]) or os.path.isdir(path) and any(f.endswith(".cs") for _, _, files in os.walk(path) for f in files) 
     if isDotnetParser:
         return DotnetParser(DOTNET_ANALYZER_PATH)
