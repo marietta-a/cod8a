@@ -22,9 +22,13 @@ class DotnetParser:
         abs_path = os.path.abspath(path)
         cwd = os.path.dirname(self.analyzer_path)
         self.file_name = Path(abs_path).stem
+
+        wdir = os.getcwd()
+        print(wdir)
+        
         
         # Look for a compiled DLL first (production/distribution mode)
-        # Expected path: src/cod8a/dotnet/CodeAnalysis/bin/Release/net10.0/CodeAnalyzer.dll
+        # Expected path: src/cod8a/dotnet/CodeAnalyzer/bin/Release/net10.0/CodeAnalyzer.dll
         dll_path = os.path.join(cwd, "bin", "Release", "net10.0", "CodeAnalyzer.dll")
         
         if os.path.exists(dll_path):
@@ -34,12 +38,14 @@ class DotnetParser:
             args = ["dotnet", "run", "--project", self.analyzer_path, "--", abs_path]
 
         result = subprocess.run(args, capture_output=True, text=True, cwd=cwd)
+        
         if result.returncode != 0:
             raise Exception(f"Dotnet analyzer failed: {result.stderr}")
 
         # The C# analyzer might still print some messages to stdout. 
         # We find the last line which should be our JSON.
         lines = result.stdout.strip().splitlines()
+        print(lines)
         json_str = next((line for line in reversed(lines) if line.startswith('{') and line.endswith('}')), None)
         
         if not json_str:

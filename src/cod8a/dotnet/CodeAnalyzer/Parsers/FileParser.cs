@@ -37,8 +37,7 @@ namespace CodeAnalyzer.Parsers
                 CompilationUnitSyntax root = tree.GetCompilationUnitRoot();
 
 
-                var directory = Directory.GetCurrentDirectory();
-                var fileName = Name ?? Path.GetFileName(directory);
+                var fileName = Path.GetFileName(FilePath);
                 var id = 0;
                 var usings = root.Usings.Select(b =>
                 {
@@ -47,7 +46,7 @@ namespace CodeAnalyzer.Parsers
                 });
                 var fileStructure = new FileStructure
                 {
-                    Id = 1,
+                    Id = ++id,
                     Name = fileName,
                     UsingDirectives = usings.ToList(),
                 };

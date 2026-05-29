@@ -32,8 +32,6 @@ class Program
         var json = "";
         var fileName = Path.GetFileName(path);
 
-        Console.WriteLine(fileName);
-
         if (isDirectory || path.EndsWith(".csproj") || path.EndsWith(".sln") || path.EndsWith(".slnx"))
         {
             var csFiles = Directory.GetFiles(Path.GetDirectoryName(path)!, "*.cs", SearchOption.AllDirectories).Where(f => !f.Contains("obj", StringComparison.CurrentCultureIgnoreCase)).ToArray();
@@ -58,5 +56,6 @@ class Program
         }
 
         Console.WriteLine(json);
+
     }
 }

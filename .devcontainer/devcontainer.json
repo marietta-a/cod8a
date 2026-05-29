@@ -30,7 +30,7 @@
         }
     },
     "remoteUser": "vscode",
-    "postCreateCommand": "poetry install && dotnet build src/cod8a/dotnet/CodeAnalysis/CodeAnalyzer.csproj",
+    "postCreateCommand": "poetry install && dotnet build src/cod8a/dotnet/CodeAnalyzer/CodeAnalyzer.csproj",
     "mounts": [
         "source=${localWorkspaceFolderBasename}-venv,target=${containerWorkspaceFolder}/.venv,type=volume"
     ]

@@ -9,7 +9,7 @@ from cod8a.parsers.python_parser import PythonParser
 from cod8a.models.models import FileStructure, ProjectStructure
 
 # Path to the C# analyzer project
-DOTNET_ANALYZER_PATH = os.path.join(os.path.dirname(__file__), "..", "dotnet", "CodeAnalysis", "CodeAnalyzer.csproj")
+DOTNET_ANALYZER_PATH = os.path.join(os.path.dirname(__file__), "..", "dotnet", "CodeAnalyzer", "CodeAnalyzer.csproj")
 
 def _get_parser(path: str):
     print(f"Checking analyzer ...")

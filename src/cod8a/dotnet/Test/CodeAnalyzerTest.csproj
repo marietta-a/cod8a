@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CodeAnalysis\CodeAnalyzer.csproj" />
+    <ProjectReference Include="..\CodeAnalyzer\CodeAnalyzer.csproj" />
   </ItemGroup>
 
 </Project>

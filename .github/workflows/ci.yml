@@ -32,7 +32,7 @@ jobs:
       run: poetry install
 
     - name: Build C# Analyzer
-      run: dotnet build src/cod8a/dotnet/CodeAnalysis/CodeAnalyzer.csproj -c Release
+      run: dotnet build src/cod8a/dotnet/CodeAnalyzer/CodeAnalyzer.csproj -c Release
 
     - name: Run Python tests
       run: poetry run pytest

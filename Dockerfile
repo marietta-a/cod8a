@@ -36,7 +36,7 @@ COPY src/ ./src/
 RUN poetry install --only main
 
 # Build the .NET analyzer
-RUN dotnet build src/cod8a/dotnet/CodeAnalysis/CodeAnalyzer.csproj
+RUN dotnet build src/cod8a/dotnet/CodeAnalyzer/CodeAnalyzer.csproj
 
 # Set the entrypoint
 ENTRYPOINT ["poetry", "run", "cod8a"]

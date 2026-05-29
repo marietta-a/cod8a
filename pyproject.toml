@@ -20,8 +20,8 @@ dependencies = [
 [tool.poetry]
 packages = [{include = "cod8a", from = "src"}]
 include = [
-    { path = "src/cod8a/dotnet/CodeAnalysis/bin/Release/net10.0/*.dll", format = ["wheel"] },
-    { path = "src/cod8a/dotnet/CodeAnalysis/bin/Release/net10.0/*.json", format = ["wheel"] }
+    { path = "src/cod8a/dotnet/CodeAnalyzer/bin/Release/net10.0/*.dll", format = ["wheel"] },
+    { path = "src/cod8a/dotnet/CodeAnalyzer/bin/Release/net10.0/*.json", format = ["wheel"] }
 ]
 
 [tool.poetry.scripts]
