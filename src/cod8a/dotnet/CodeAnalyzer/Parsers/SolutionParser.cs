@@ -7,7 +7,7 @@ namespace CodeAnalyzer.Parsers
 {
     public sealed partial class SolutionParser<T> : BaseParser<T> where T : SolutionStructure
     {
-        public override string Name { get; init; }
+        public override required string Name { get; init; }
 
         public override T Parse()
         {

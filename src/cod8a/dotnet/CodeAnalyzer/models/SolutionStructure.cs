@@ -13,16 +13,16 @@ namespace CodeAnalyzer.Models
         /// <summary>
         /// Gets or sets the name of the Solution
         /// </summary>
-        public string Name { get; set; }
+        public required string Name { get; set; }
 
         /// <summary>
         /// Gets or sets the description associated with the object.
         /// </summary>
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
         /// <summary>
         /// Gets or sets the collection of projects within this solution
         /// </summary>
-        public List<ProjectStructure> Projects { get; set; }
+        public required List<ProjectStructure> Projects { get; set; }
     }
 }

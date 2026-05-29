@@ -10,24 +10,30 @@ namespace CodeAnalyzer.Parsers
 {
     public sealed partial class ProjectParser<T> : BaseParser<T> where T : ProjectStructure
     {
-        public override string Name { get; init; }
+        public override required string Name { get; init; }
         
-        public string[] FilePaths { get; init; }
+        public required string[] FilePaths { get; init; }
 
         public override T Parse()
         {
             try
             {
+                var fileId = 1;
                 var projectStructure = new ProjectStructure
                 {
                     Id = 1,
                     Name = Name,
-                    Files = FilePaths.Select(b => new FileParser<FileStructure> { FilePath = b, Name = Path.GetFileName(b) }.Parse()).ToList(),
+                    Files = FilePaths.Select(b => new FileParser<FileStructure> 
+                    { 
+                        FilePath = b, 
+                        Name = Path.GetFileName(b),
+                        Id = fileId++ 
+                    }.Parse()).ToList(),
                 };
                 
                 return (T) projectStructure;
             }
-            catch (Exception ex)
+            catch
             {
                 throw;
             }

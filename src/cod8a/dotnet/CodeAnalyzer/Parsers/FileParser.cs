@@ -19,12 +19,13 @@ namespace CodeAnalyzer.Parsers
     public sealed partial class FileParser<T> : BaseParser<T> where T : FileStructure
     {
 
-        public override string Name { get; init; }
+        public override required string Name { get; init; }
 
         /// <summary>
         /// Gets the code associated with this instance.
         /// </summary>
-        public string FilePath { get; init; }
+        public required string FilePath { get; init; }
+        public int Id { get; init; } = 1;
         public override T Parse()
         {
             try
@@ -46,7 +47,7 @@ namespace CodeAnalyzer.Parsers
                 });
                 var fileStructure = new FileStructure
                 {
-                    Id = ++id,
+                    Id = Id,
                     Name = fileName,
                     UsingDirectives = usings.ToList(),
                 };
@@ -56,7 +57,7 @@ namespace CodeAnalyzer.Parsers
 
                 return (T)fileStructure;
             }
-            catch (Exception ex)
+            catch 
             {
                 throw;
             }
@@ -75,7 +76,7 @@ namespace CodeAnalyzer.Parsers
                     _ => string.Empty
                 };
             }
-            catch( Exception ex )
+            catch
             {
                 throw;
             }
@@ -97,7 +98,10 @@ namespace CodeAnalyzer.Parsers
                     var relationships = new List<RelationShip>();
 
                     var baseTypes = classDeclaration.BaseList?.Types;
-                    int id = 0;
+                    int relId = 0;
+                    int fieldId = 0;
+                    int methodId = 0;
+                    int classId = 0;
 
                     if(baseTypes is not null)
                     {
@@ -111,19 +115,19 @@ namespace CodeAnalyzer.Parsers
                                     _ => b.Type.ToString().Split('<')[0]
                                 };
                                 var type = parent.StartsWith("I") && parent.Length > 1 && char.IsUpper(parent[1]) ? "Interface" : "Class";
-                                return new RelationShip (++id, type, parent);
+                                return new RelationShip (++relId, type, parent);
                             })
                         );
                     }
 
                     // Extract standard fields and properties
-                    fieldStructures.AddRange(classDeclaration.DescendantNodes().OfType<FieldDeclarationSyntax>().Select(f => new FieldStructure(default, f.Declaration.Variables.First().Identifier.Text, f.Modifiers.ToFullString().Trim(), f.Declaration.Type.ToString(), f.GetLeadingTrivia().ToString().Trim())));
-                    fieldStructures.AddRange(classDeclaration.DescendantNodes().OfType<PropertyDeclarationSyntax>().Select(f => new FieldStructure(default, f.Identifier.Text, f.Modifiers.ToFullString().Trim(), f.Type.ToString(), f.GetLeadingTrivia().ToString().Trim())));
+                    fieldStructures.AddRange(classDeclaration.DescendantNodes().OfType<FieldDeclarationSyntax>().Select(f => new FieldStructure(++fieldId, f.Declaration.Variables.First().Identifier.Text, f.Modifiers.ToFullString().Trim(), f.Declaration.Type.ToString(), f.GetLeadingTrivia().ToString().Trim())));
+                    fieldStructures.AddRange(classDeclaration.DescendantNodes().OfType<PropertyDeclarationSyntax>().Select(f => new FieldStructure(++fieldId, f.Identifier.Text, f.Modifiers.ToFullString().Trim(), f.Type.ToString(), f.GetLeadingTrivia().ToString().Trim())));
                     
                     // Extract record positional parameters as properties
                     if (classDeclaration is RecordDeclarationSyntax recordDecl && recordDecl.ParameterList != null)
                     {
-                        fieldStructures.AddRange(recordDecl.ParameterList.Parameters.Select(p => new FieldStructure(default, p.Identifier.Text, "public", p.Type?.ToString() ?? "", p.GetLeadingTrivia().ToString().Trim())));
+                        fieldStructures.AddRange(recordDecl.ParameterList.Parameters.Select(p => new FieldStructure(++fieldId, p.Identifier.Text, "public", p.Type?.ToString() ?? "", p.GetLeadingTrivia().ToString().Trim())));
                     }
 
                     foreach (var method in classDeclaration.Members.OfType<MethodDeclarationSyntax>())
@@ -131,14 +135,34 @@ namespace CodeAnalyzer.Parsers
                         var parameters = method.ParameterList.Parameters.Select(p => new ParameterStructure(p.Identifier.Text, p.Modifiers.ToFullString().Trim(), p.Type?.ToString() ?? "", p.GetLeadingTrivia().ToString().Trim())).ToList();
                         parameterStructures.AddRange(parameters);
 
-                        methodStructures.Add(new MethodStructure(default, method.Identifier.Text, method.Modifiers.ToFullString().Trim(), method.ReturnType.ToString(), parameters, method.GetLeadingTrivia().ToString().Trim()));
+                        methodStructures.Add(new MethodStructure(++methodId, method.Identifier.Text, method.Modifiers.ToFullString().Trim(), method.ReturnType.ToString(), parameters, method.GetLeadingTrivia().ToString().Trim()));
                     }
-                    classes.Add(new ClassStructure(default, classDeclaration.Identifier.Text, methodStructures, fieldStructures, classDeclaration.Keyword.ToFullString().Trim(), relationships, classDeclaration.GetLeadingTrivia().ToString().Trim()));
+
+                    var className = classDeclaration.Identifier.Text;
+                    if (string.IsNullOrEmpty(className) && classDeclaration.Keyword.Text == "extension")
+                    {
+                        var parameterList = classDeclaration.ChildNodes().OfType<ParameterListSyntax>().FirstOrDefault();
+                        if (parameterList != null && parameterList.Parameters.Any())
+                        {
+                            var extendedType = parameterList.Parameters[0].Type;
+                            if (extendedType != null)
+                            {
+                                className = $"{extendedType}ExtensionBlock";
+                                relationships.Add(new RelationShip(++relId, "Extension", extendedType.ToString()));
+                            }
+                        }
+                        else
+                        {
+                            className = "extension";
+                        }
+                    }
+
+                    classes.Add(new ClassStructure(++classId, className, methodStructures, fieldStructures, classDeclaration.Keyword.ToFullString().Trim(), relationships, classDeclaration.GetLeadingTrivia().ToString().Trim()));
                 }
 
                 return classes;
             }
-            catch (Exception ex)
+            catch
             {
                 throw;
             }

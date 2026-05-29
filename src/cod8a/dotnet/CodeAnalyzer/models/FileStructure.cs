@@ -14,17 +14,17 @@ namespace CodeAnalyzer.Models
         /// <summary>
         /// <see langword="nameof"/>of the namespace, e.g., <c>MyNamespace</c>.
         /// </summary>
-        public string Name { get; set; }
+        public required string Name { get; set; }
 
         /// <summary>
         /// Gets or sets the collection of using directives associated with the current context.
         /// </summary>
-        public List<UsingDirective> UsingDirectives { get; set; }
+        public List<UsingDirective>? UsingDirectives { get; set; }
 
         /// <summary>
         /// Gets or sets the collection of classes associated with the current instance.
         /// </summary>
-        public List<ClassStructure> Classes { get; set; }
+        public List<ClassStructure>? Classes { get; set; }
 
     }
 

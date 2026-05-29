@@ -14,16 +14,16 @@ namespace CodeAnalyzer.Models
         /// <summary>
         /// Name of the Project
         /// </summary>
-        public string Name { get; set; }
+        public required string Name { get; set; }
 
         /// <summary>
         /// Project Description
         /// </summary>
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
         /// <summary>
         /// Gets or sets the collection of files associated with the Project.
         /// </summary>
-        public List<FileStructure> Files { get; set; }
+        public required List<FileStructure> Files { get; set; }
     }
 }

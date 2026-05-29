@@ -55,7 +55,5 @@ class Program
             json = JsonSerializer.Serialize(fileStructure.Parse(), new JsonSerializerOptions { WriteIndented = false });
         }
 
-        Console.WriteLine(json);
-
     }
 }
