@@ -9,7 +9,6 @@ class Program
 {
     static void Main(string[] args)
     {
-        Console.WriteLine("Starting code analysis...");
         var path = args.Length > 0 ? args[0] : null;
 
         if(string.IsNullOrEmpty(path))
@@ -54,6 +53,8 @@ class Program
 
             json = JsonSerializer.Serialize(fileStructure.Parse(), new JsonSerializerOptions { WriteIndented = false });
         }
+
+        Console.WriteLine(json);
 
     }
 }

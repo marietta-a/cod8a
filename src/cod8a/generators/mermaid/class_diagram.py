@@ -129,6 +129,9 @@ class ClassDiagramGenerator:
                 label = "inherits"
                 if "interface" in relation.type.lower() or "implements" in relation.type.lower():
                    label = "implements"
+                elif "extension" in relation.type.lower():
+                    label = "extends"
+                    connector = "<.."
                 
                 rel_lines.append(f"    {relation.parent_name} {connector} {cls_name} : {label}")
             
