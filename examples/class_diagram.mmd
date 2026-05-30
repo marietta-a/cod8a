@@ -1,0 +1,67 @@
+classDiagram
+    class UsingDirective {
+        +int id
+        +str name
+    }
+
+    class ParameterStructure {
+        +str name
+        +str modifier
+        +str type
+        +str summary
+    }
+
+    class FieldStructure {
+        +int id
+        +str name
+        +str modifier
+        +str type
+        +str summary
+    }
+
+    class MethodStructure {
+        +int id
+        +str name
+        +str modifier
+        +str return_type
+        +List[ParameterStructure] parameters
+        +str summary
+    }
+
+    class Relationship {
+        +int id
+        +str type
+        +str parent_name
+    }
+
+    class ClassStructure {
+        +int id
+        +str name
+        +List[MethodStructure] methods
+        +List[FieldStructure] fields
+        +str type
+        +List[Relationship] associated_item
+        +str summary
+    }
+
+    class FileStructure {
+        +int id
+        +str name
+        +Optional[List[UsingDirective]] using_directives
+        +Optional[List[ClassStructure]] classes
+    }
+
+    class ProjectStructure {
+        +str name
+        +List[FileStructure] files
+    }
+
+    BaseModel <|-- FileStructure : inherits
+    BaseModel <|-- ProjectStructure : inherits
+    ClassStructure *-- FieldStructure : contains
+    ClassStructure *-- MethodStructure : contains
+    ClassStructure *-- Relationship : contains
+    FileStructure *-- ClassStructure : contains
+    FileStructure *-- UsingDirective : contains
+    MethodStructure *-- ParameterStructure : contains
+    ProjectStructure *-- FileStructure : contains

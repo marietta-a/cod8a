@@ -21,11 +21,13 @@ class FlowchartDiagramGenerator:
         elif isinstance(data, list): files = data
 
         for file in files:
-            file_id = f"file_{self._get_id()}"
+            # file_id = f"file_{self._get_id()}"
+            file_id = f"file_{file.id}" if file.id else f"file_{self._get_id()}"
             mermaid_lines.append(f'    {file_id}["File: {file.name}"]')
             
             for cls in file.classes:
-                cls_id = f"cls_{self._get_id()}"
+                # cls_id = f"cls_{self._get_id()}"
+                cls_id = f"cls_{cls.id}" if cls.id else f"cls_{self._get_id()}"
                 mermaid_lines.append(f'    {file_id} --> {cls_id}["Class: {cls.name}"]')
                 
                 # Exclude private Properties
@@ -33,12 +35,14 @@ class FlowchartDiagramGenerator:
                 # If too many fields, don't overwhelm the diagram truncate
                 fields = fields[:10] if len(fields) > 10 else fields
                 for field in fields:
-                    f_id = f"f_{self._get_id()}"
+                    # f_id = f"f_{self._get_id()}"
+                    f_id = f"f_{field.id}" if field.id else f"f_{self._get_id()}"
                     mermaid_lines.append(f'    {cls_id} --> {f_id}["{field.name} ({field.type})"]')
 
                 # Methods: Always helpful to see
                 for method in cls.methods:
-                    m_id = f"m_{self._get_id()}"
+                    # m_id = f"m_{self._get_id()}"
+                    m_id = f"m_{method.id}" if method.id else f"m_{self._get_id()}"
                     mermaid_lines.append(f'    {cls_id} --> {m_id}{{"{method.name}()"}}')
             
         return "\n".join(mermaid_lines)

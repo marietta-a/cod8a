@@ -1,0 +1,60 @@
+sequenceDiagram
+    autonumber
+    participant C as User
+    participant P0 as "UsingDirective"
+    participant P1 as "ParameterStructure"
+    participant P2 as "FieldStructure"
+    participant P3 as "MethodStructure"
+    participant P4 as "Relationship"
+    participant P5 as "ClassStructure"
+    participant P6 as "FileStructure"
+    participant P7 as "ProjectStructure"
+
+    C->>P0: Create UsingDirective
+    P0->>P0: Set id
+    P0->>P0: Set name
+
+    C->>P1: Create ParameterStructure
+    P1->>P1: Set name
+    P1->>P1: Set modifier
+    P1->>P1: Set type
+    P1->>P1: Set summary
+
+    C->>P2: Create FieldStructure
+    P2->>P2: Set id
+    P2->>P2: Set name
+    P2->>P2: Set modifier
+    P2->>P2: Set type
+    P2->>P2: Set summary
+
+    C->>P3: Create MethodStructure
+    P3->>P3: Set id
+    P3->>P3: Set name
+    P3->>P3: Set modifier
+    P3->>P3: Set return_type
+    P3->>P3: Set parameters
+    P3->>P3: Set summary
+
+    C->>P4: Create Relationship
+    P4->>P4: Set id
+    P4->>P4: Set type
+    P4->>P4: Set parent_name
+
+    C->>P5: Create ClassStructure
+    P5->>P5: Set id
+    P5->>P5: Set name
+    P5->>P5: Set methods
+    P5->>P5: Set fields
+    P5->>P5: Set type
+    P5->>P5: Set associated_item
+    P5->>P5: Set summary
+
+    C->>P6: Create FileStructure
+    P6->>P6: Set id
+    P6->>P6: Set name
+    P6->>P6: Set using_directives
+    P6->>P6: Set classes
+
+    C->>P7: Create ProjectStructure
+    P7->>P7: Set name
+    P7->>P7: Set files

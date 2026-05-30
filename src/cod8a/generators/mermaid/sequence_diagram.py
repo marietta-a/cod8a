@@ -35,15 +35,15 @@ class SequenceDiagramGenerator:
 
             if is_model:
                 # Exclude private properties
-                # fields = [f for f in cls.fields if f.modifier != "private"]
+                fields = [f for f in cls.fields if f.modifier != "private"]
                 mermaid_lines.append(f"    C->>{cls_alias}: Create {cls.name}")
                 for field in cls.fields[:20]: # Limit to 20 fields to avoid huge diagrams
                     if not field.name.startswith('_'):
                         mermaid_lines.append(f"    {cls_alias}->>{cls_alias}: Set {self._sanitize(field.name)}")
             else:
                 # Exclude private methods
-                methods = [m for m in cls.methods if m.modifier != "private"]
-                for method in methods:
+                # methods = [m for m in cls.methods if m.modifier != "private"]
+                for method in cls.methods:
                     if method.name.lower() in["dispose", "tostring", "equals", "gethashcode", "gettype"]:
                         continue
                     
