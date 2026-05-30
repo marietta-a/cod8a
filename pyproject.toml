@@ -1,6 +1,6 @@
 [project]
 name = "cod8a"
-version = "0.1.0"
+version = "0.2.0"
 description = "cod8a is a code documentation and visualization tool for Python and .NET projects"
 authors = [
     { name = "Akumbom",email = "akumbom5ma@gmail.com"}
@@ -12,15 +12,14 @@ keywords = [ "visualization", "uml", "docs", "flowchart", "class", "sequence", "
 license = "MIT"
 readme = "README.md"
 requires-python = ">=3.13"
-
-[project.urls]
-Homepage = "https://github.com/marietta-a/cod8a"
-Repository = "https://github.com/marietta-a/cod8a"
-
 dependencies = [
     "click (>=8.3.3,<9.0.0)",
     "pydantic (>=2.13.3,<3.0.0)"
 ]
+
+[project.urls]
+Homepage = "https://github.com/marietta-a/cod8a"
+Repository = "https://github.com/marietta-a/cod8a"
 
 [tool.poetry]
 packages = [{include = "cod8a", from = "src"}]
@@ -29,7 +28,7 @@ include = [
     { path = "src/cod8a/dotnet/CodeAnalyzer/bin/Release/net10.0/*.json", format = ["wheel"] }
 ]
 
-[tool.poetry.scripts]
+[project.scripts]
 cod8a = "cod8a.cli:main"
 cde8a = "cod8a.cli:doc_main"
 

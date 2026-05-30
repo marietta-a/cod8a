@@ -9,7 +9,7 @@ class SequenceDiagramGenerator:
     def _sanitize(self, name: str) -> str:
         return re.sub(r'[^a-zA-Z0-9_ ]', '', name)
 
-    def generate(self, data: Union['FileStructure', 'ProjectStructure', list['FileStructure']]) -> str:
+    def generate(self, data: Union['FileStructure', 'ProjectStructure', list['FileStructure']], summarize: bool = False) -> str:
         classes = self._extract_classes(data)
         
         mermaid_lines = ["sequenceDiagram", "    autonumber"]
@@ -37,9 +37,11 @@ class SequenceDiagramGenerator:
                 # Exclude private properties
                 fields = [f for f in cls.fields if f.modifier != "private"]
                 mermaid_lines.append(f"    C->>{cls_alias}: Create {cls.name}")
-                for field in cls.fields[:20]: # Limit to 20 fields to avoid huge diagrams
-                    if not field.name.startswith('_'):
-                        mermaid_lines.append(f"    {cls_alias}->>{cls_alias}: Set {self._sanitize(field.name)}")
+                
+                if not summarize:
+                    for field in cls.fields[:20]: # Limit to 20 fields to avoid huge diagrams
+                        if not field.name.startswith('_'):
+                            mermaid_lines.append(f"    {cls_alias}->>{cls_alias}: Set {self._sanitize(field.name)}")
             else:
                 # Exclude private methods
                 # methods = [m for m in cls.methods if m.modifier != "private"]
@@ -70,8 +72,8 @@ class SequenceDiagramGenerator:
         if not type_str: return ""
         return re.split(r'[<\[]', type_str)[0].replace('?', '').split('.')[-1].strip()
 
-def generate_sequence_diagram(data) -> str:
-    return SequenceDiagramGenerator().generate(data)
+def generate_sequence_diagram(data, summarize: bool = False) -> str:
+    return SequenceDiagramGenerator().generate(data, summarize)
 
 if __name__ == "__main__":
     import sys

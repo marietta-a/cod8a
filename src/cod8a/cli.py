@@ -43,7 +43,9 @@ def cli():
               help='The type of diagram to generate (default: class).')
 @click.option('-o', '--output', 
               help='Optional output file path. If not provided, you will be prompted to save to the Downloads folder.')
-def uml(path, diagram_type, output):
+@click.option('-s', '--summarize', is_flag=True, 
+              help='Summarize the diagram by omitting details like fields and methods (recommended for large files).')
+def uml(path, diagram_type, output, summarize):
     """Generate UML diagram (Mermaid format)."""
     struct = extract_structure(path)
     base_name = os.path.basename(path or os.getcwd())
@@ -53,15 +55,30 @@ def uml(path, diagram_type, output):
         click.echo("Error: Could not extract structure.")
         return
 
+    # Auto-summarize if not explicitly requested
+    if not summarize:
+        classes = []
+        if hasattr(struct, 'files'):
+            classes = [c for f in struct.files for c in f.classes]
+        elif hasattr(struct, 'classes'):
+            classes = struct.classes
+        elif isinstance(struct, list):
+            classes = [c for f in struct for c in f.classes]
+        
+        total_members = sum(len(c.fields) + len(c.methods) for c in classes)
+        if len(classes) > 50 or total_members > 250:
+            click.echo("Note: Large file/project detected. Auto-summarizing diagram for better visualization.")
+            summarize = True
+
     canon_type = "class"
     if DiagramType.FLOWCHART.value.startswith(diagram_type):
-        diagram = generate_flowchart_diagram(struct, base_name)
+        diagram = generate_flowchart_diagram(struct, base_name, summarize)
         canon_type = "flowchart"
     elif DiagramType.SEQUENCE.value.startswith(diagram_type):
-        diagram = generate_sequence_diagram(struct)
+        diagram = generate_sequence_diagram(struct, summarize)
         canon_type = "sequence"
     else:
-        diagram = generate_class_diagram(struct)
+        diagram = generate_class_diagram(struct, summarize)
         canon_type = "class"
         
     print(diagram)

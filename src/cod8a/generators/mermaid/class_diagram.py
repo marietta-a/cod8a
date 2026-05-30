@@ -9,7 +9,7 @@ class ClassDiagramGenerator:
     Generates a Mermaid class diagram from a JSON representation of code structure.
     """
 
-    def generate(self, data: Union[FileStructure, ProjectStructure, List[FileStructure]]) -> str:
+    def generate(self, data: Union[FileStructure, ProjectStructure, List[FileStructure]], summarize: bool = False) -> str:
         if not isinstance(data, FileStructure | ProjectStructure | list):
                 return "Error: Invalid data structure"
 
@@ -19,7 +19,7 @@ class ClassDiagramGenerator:
         mermaid_lines = ["classDiagram"]
         # 1. Generate Class Definitions
         for cls in all_classes:
-            mermaid_lines.extend(self._generate_class_block(cls))
+            mermaid_lines.extend(self._generate_class_block(cls, summarize))
         
         # 2. Generate Relationships
         mermaid_lines.extend(self._generate_relationships(all_classes))
@@ -58,7 +58,10 @@ class ClassDiagramGenerator:
         
         return classes
 
-    def _generate_class_block(self, cls: ClassStructure) -> List[str]:
+    def _generate_class_block(self, cls: ClassStructure, summarize: bool = False) -> List[str]:
+        if summarize:
+            return [f"    class {cls.name}", ""]
+            
         lines = [f"    class {cls.name} {{"]
         
         # Fields
@@ -156,10 +159,10 @@ class ClassDiagramGenerator:
                     
         return sorted(list(set(rel_lines)))
 
-def generate_class_diagram(data: FileStructure | ProjectStructure) -> str:
+def generate_class_diagram(data: FileStructure | ProjectStructure, summarize: bool = False) -> str:
     print("calling uml class generator ...")
     generator = ClassDiagramGenerator()
-    return generator.generate(data)
+    return generator.generate(data, summarize)
 
 if __name__ == "__main__":
     import sys
