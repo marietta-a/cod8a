@@ -87,24 +87,24 @@ def uml(path, diagram_type, output, summarize):
     save_diagram(struct, canon_type, diagram, output, path)
 
 
-# TODO Generating code documentation 
-@click.command(help="[TODO] Generate documentation (Markdown format) from code structure.")
-@click.option('-p', '--path', help='Specific path of file(s) to analyze')
-@click.option('--json', 'output_json', is_flag=True, help='Output in JSON format')
-def doc_cli(path, output_json):
-    """Generate documentation (Markdown format)."""
-    target = path or os.getcwd()
-    struct = extract_structure(target)
+# # TODO Generating code documentation 
+# @click.command(help="[TODO] Generate documentation (Markdown format) from code structure.")
+# @click.option('-p', '--path', help='Specific path of file(s) to analyze')
+# @click.option('--json', 'output_json', is_flag=True, help='Output in JSON format')
+# def doc_cli(path, output_json):
+#     """Generate documentation (Markdown format)."""
+#     target = path or os.getcwd()
+#     struct = extract_structure(target)
 
 
 # Main entry point for cod8a
 def main():
-    cli.add_command(doc_cli, name="doc")
+    # cli.add_command(doc_cli, name="doc")
     cli()
 
 # Separate entry point for code8a
-def doc_main():
-    doc_cli()
+# def doc_main():
+    # doc_cli()
 
 if __name__ == "__main__":
     main()
