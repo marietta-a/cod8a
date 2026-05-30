@@ -25,7 +25,7 @@ def extract_structure(path) -> Union[FileStructure | ProjectStructure | list[Fil
     
     pathExists = os.path.exists(path)
     if not pathExists:
-        print("Not found")
+        print("Not found: Ensure path doesn't end with a separator and points to a valid file or directory.")
         return
     
     struct = parser.parse(path or os.getcwd())
