@@ -3,7 +3,7 @@ name = "cod8a"
 version = "0.2.0"
 description = "cod8a is a code documentation and visualization tool for Python and .NET projects"
 authors = [
-    { name = "Akumbom",email = "akumbom5ma@gmail.com"}
+    { name = "Marietta Akumbom",email = "akumbom5ma@gmail.com"}
 ]
 maintainers = [ 
     { name = "Marietta Akumbom" }
