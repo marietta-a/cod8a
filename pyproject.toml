@@ -12,6 +12,11 @@ keywords = [ "visualization", "uml", "docs", "flowchart", "class", "sequence", "
 license = "MIT"
 readme = "README.md"
 requires-python = ">=3.13"
+
+[project.urls]
+Homepage = "https://github.com/marietta-a/cod8a"
+Repository = "https://github.com/marietta-a/cod8a"
+
 dependencies = [
     "click (>=8.3.3,<9.0.0)",
     "pydantic (>=2.13.3,<3.0.0)"
