@@ -1,6 +1,6 @@
 [project]
 name = "cod8a"
-version = "0.2.1"
+version = "0.2.2"
 description = "cod8a is a code documentation and visualization tool for Python and .NET projects"
 authors = [
     { name = "Marietta Akumbom",email = "akumbom5ma@gmail.com"}
