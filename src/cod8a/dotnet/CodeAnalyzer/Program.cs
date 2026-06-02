@@ -34,7 +34,7 @@ class Program
         if (isDirectory || path.EndsWith(".csproj") || path.EndsWith(".sln") || path.EndsWith(".slnx"))
         {
             var directoryPath = isDirectory ? path : Path.GetDirectoryName(path)!;
-            var csFiles = Directory.GetFiles(directoryPath, "*.cs", SearchOption.TopDirectoryOnly).Where(f => !f.Contains("obj", StringComparison.CurrentCultureIgnoreCase)).ToArray();
+            var csFiles = Directory.GetFiles(directoryPath, "*.cs", SearchOption.AllDirectories).Where(f => !f.Contains("obj", StringComparison.CurrentCultureIgnoreCase)).ToArray();
 
             BaseParser<ProjectStructure> projectStructure = new ProjectParser<ProjectStructure>()
             {
