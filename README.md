@@ -72,7 +72,7 @@ Generate Markdown documentation from code structure:
 
 ```bash
 # Not yet implemented
-cod8a doc -p path/to/source
+cod8a doc -p <path_to_source>
 ```
 
 ## Features
