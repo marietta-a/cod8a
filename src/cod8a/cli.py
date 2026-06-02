@@ -43,8 +43,8 @@ def cli():
               help='The type of diagram to generate (default: class).')
 @click.option('-o', '--output', 
               help='Optional output file path. If not provided, you will be prompted to save to the Downloads folder.')
-@click.option('-s', '--summarize', is_flag=True, 
-              help='Summarize the diagram by omitting details like fields and methods (recommended for large files).')
+@click.option('-s', '--summarize/--no-summarize', 'summarize', default=None,
+              help='Summarize the diagram by omitting details like fields and methods (recommended for large files). Defaults to auto-summarize for large projects.')
 def uml(path, diagram_type, output, summarize):
     """Generate UML diagram (Mermaid format)."""
     struct = extract_structure(path)
@@ -55,8 +55,8 @@ def uml(path, diagram_type, output, summarize):
         click.echo("Error: Could not extract structure.")
         return
 
-    # Auto-summarize if not explicitly requested
-    if not summarize:
+    # Auto-summarize if not explicitly requested (None means neither --summarize nor --no-summarize was provided)
+    if summarize is None:
         classes = []
         if hasattr(struct, 'files'):
             classes = [c for f in struct.files for c in f.classes]
@@ -69,6 +69,8 @@ def uml(path, diagram_type, output, summarize):
         if len(classes) > 50 or total_members > 250:
             click.echo("Note: Large file/project detected. Auto-summarizing diagram for better visualization.")
             summarize = True
+        else:
+            summarize = False
 
     canon_type = "class"
     if DiagramType.FLOWCHART.value.startswith(diagram_type):
