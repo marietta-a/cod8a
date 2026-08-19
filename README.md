@@ -1,5 +1,5 @@
 # cod8a
-
+[![PyPI Downloads](https://static.pepy.tech/personalized-badge/cod8a?period=total&units=INTERNATIONAL_SYSTEM&left_color=BLACK&right_color=GREEN&left_text=downloads)](https://pepy.tech/projects/cod8a)
 cod8a pronounced codetta, is a code documentation and visualization tool for **Python** and **.NET** projects.
 
 ## Installation
